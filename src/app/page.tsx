@@ -10,7 +10,7 @@ import { AiToolsSection } from '../components/AiToolsSection';
 
 // --- MOCK API & DATA (Placeholder) ---
 const getPosts = async () => { return []; };
-const getPost = async (slug) => { return null; };
+const getPost = async (slug: string) => { return null; };
 const experts = [];
 
 // --- TEMPORARY PLACEHOLDER COMPONENTS ---
