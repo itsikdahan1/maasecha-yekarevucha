@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Icon from '@/components/ui/Icon';
+import { Icon } from '@/components/ui/Icon';
 
 export default function Footer() {
     return (

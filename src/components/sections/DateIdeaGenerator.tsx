@@ -2,7 +2,7 @@
 
 'use client';
 import React, { useState } from 'react';
-import Icon from '@/components/ui/Icon';
+import { Icon } from '@/components/ui/Icon';
 import ToolSkeleton from '@/components/ui/ToolSkeleton';
 
 const callApi = async (setLoading: Function, setResult: Function) => {

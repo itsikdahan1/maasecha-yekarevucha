@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useMemo } from 'react';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
-import Icon from '@/components/ui/Icon';
+import { Icon } from '@/components/ui/Icon';
 // ... הגדרות Types נשארות זהות ...
 
 export default function ProductionEveningSection({ info }: any) {

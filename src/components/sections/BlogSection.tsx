@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import Icon from '@/components/ui/Icon';
+import { Icon } from '@/components/ui/Icon';
 // ... הגדרות Types נשארות זהות ...
 
 export default function BlogSection({ posts }: any) {
