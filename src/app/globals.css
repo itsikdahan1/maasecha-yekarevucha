@@ -4,8 +4,10 @@
 
 @layer base {
   body {
-    @apply text-slate-700 antialiased;
+    @apply bg-brand-cream text-slate-700;
+    font-family: 'Assistant', sans-serif;
   }
+
   h1, h2, h3, h4, h5, h6, b, strong {
     @apply font-bold text-brand-dark;
   }

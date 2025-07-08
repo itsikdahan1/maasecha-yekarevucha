@@ -1,28 +1,50 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Header } from '../components/Header';
-import { HeroSection } from '../components/HeroSection';
-import { WhyUsSection } from '../components/WhyUsSection';
-import { ProductionEveningSection } from '../components/ProductionEveningSection';
-import { CommunitySection } from '../components/CommunitySection';
-import { AiToolsSection } from '../components/AiToolsSection';
+import React, { useState, useEffect, FC } from 'react';
+import { Header } from '@/components/Header';
+import { HeroSection } from '@/components/HeroSection';
+import { WhyUsSection } from '@/components/WhyUsSection';
+import { ProductionEveningSection } from '@/components/ProductionEveningSection';
+import { CommunitySection } from '@/components/CommunitySection';
+import { AiToolsSection } from '@/components/AiToolsSection';
 
-// --- MOCK API & DATA (Placeholder) ---
-const getPosts = async () => { return []; };
-const getPost = async (slug: string) => { return null; };
-const experts = [];
+// --- הגדרות טיפוסים ---
+type Post = {
+  title: string;
+  excerpt: string;
+  slug: string;
+  category: string;
+  author: string;
+};
 
-// --- TEMPORARY PLACEHOLDER COMPONENTS ---
-const Footer = () => <footer className="h-40 bg-brand-dark text-white flex items-center justify-center"><p className="font-bold">Footer Placeholder</p></footer>;
-const ExpertsSection = ({ experts }) => <section className="h-96 bg-brand-cream flex items-center justify-center"><p className="font-bold">Experts Section Placeholder</p></section>;
-const BlogSection = ({ posts, onNavigate }) => <section className="h-96 bg-white flex items-center justify-center"><p className="font-bold">Blog Section Placeholder</p></section>;
-const BlogPostPage = ({ slug, onNavigate }) => <div className="h-screen bg-white flex items-center justify-center"><p className="font-bold">Blog Post Page Placeholder for: {slug}</p></div>;
-const FloatingButtons = () => <div className="fixed bottom-5 right-5 z-50 p-3 bg-cyan-200 rounded-full shadow-lg"><p className="text-xs">Floating Buttons</p></div>;
-// --- END OF PLACEHOLDERS ---
+type Expert = {
+  name: string;
+  role: string;
+  imageUrl: string;
+};
 
-const HomePageContent = ({ onNavigate }) => {
-  const [blogPosts, setBlogPosts] = useState([]);
+type NavigateFunction = (page: 'home' | 'blogPost', slug?: string | null) => void;
+
+// --- הגדרות נתונים וקומפוננטות זמניות ---
+
+const getPosts = async (): Promise<Post[]> => {
+  return []; 
+};
+
+const experts: Expert[] = [];
+
+// קומפוננטות זמניות עם הגדרות טיפוסים
+const Footer: FC = () => <footer className="h-40 bg-gray-800 text-white flex items-center justify-center"><p>Footer Placeholder</p></footer>;
+const ExpertsSection: FC<{ experts: Expert[] }> = ({ experts }) => <section className="p-8 bg-gray-100"><h2 className="text-2xl font-bold text-center">Experts Section</h2></section>;
+const BlogSection: FC<{ posts: Post[], onNavigate: NavigateFunction }> = ({ posts, onNavigate }) => <section className="p-8"><h2 className="text-2xl font-bold text-center">Blog Section</h2></section>;
+const BlogPostPage: FC<{ slug: string | null, onNavigate: NavigateFunction }> = ({ slug, onNavigate }) => <div className="p-8 min-h-screen"><h1 className="text-3xl font-bold">Blog Post: {slug}</h1></div>;
+const FloatingButtons: FC = () => <div className="fixed bottom-5 right-5 z-50 p-3 bg-cyan-200 rounded-full shadow-lg"><p className="text-xs">Buttons</p></div>;
+
+// --- סוף החלק הזמני ---
+
+const HomePageContent: FC<{ onNavigate: NavigateFunction }> = ({ onNavigate }) => {
+  const [blogPosts, setBlogPosts] = useState<Post[]>([]);
+  
   useEffect(() => {
     getPosts().then(setBlogPosts);
   }, []);
@@ -40,11 +62,11 @@ const HomePageContent = ({ onNavigate }) => {
   );
 };
 
-export default function Page() {
-  const [currentPage, setCurrentPage] = useState('home');
-  const [currentSlug, setCurrentSlug] = useState(null);
+const Page: FC = () => {
+  const [currentPage, setCurrentPage] = useState<'home' | 'blogPost'>('home');
+  const [currentSlug, setCurrentSlug] = useState<string | null>(null);
   
-  const handleNavigate = (page, slug = null) => {
+  const handleNavigate: NavigateFunction = (page, slug = null) => {
       setCurrentPage(page);
       setCurrentSlug(slug);
       window.scrollTo(0, 0);
@@ -71,3 +93,5 @@ export default function Page() {
     </div>
   );
 }
+
+export default Page;

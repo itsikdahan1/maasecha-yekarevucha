@@ -4,14 +4,13 @@ import "./globals.css";
 
 const assistant = Assistant({
   subsets: ["hebrew"],
-  weight: ['400', '600', '700'],
+  weight: ['300', '400', '600', '700'],
   display: 'swap',
-  variable: '--font-assistant',
 });
 
 export const metadata: Metadata = {
-  title: "מעשיך יקרבוך | הדרך לחופה מתחילה כאן",
-  description: "מיזם שידוכים חדשני המשלב טכנולוגיה, קהילה וחוויה אישית.",
+  title: "מעשיך יקרבוך",
+  description: "מיזם שידוכים חדשני ודיגיטלי למגזר הדתי והחרדי",
 };
 
 export default function RootLayout({
@@ -21,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="he" dir="rtl">
-      <body className={`${assistant.variable} font-sans bg-brand-cream`}>{children}</body>
+      <body className={assistant.className}>{children}</body>
     </html>
   );
 }
