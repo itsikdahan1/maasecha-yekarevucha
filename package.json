@@ -12,16 +12,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@portabletext/react": "^3.1.0",
     "@sanity/client": "^6.20.1",
     "@sanity/image-url": "^1.0.2",
     "axios": "^1.10.0",
+    "clsx": "^2.1.1",
     "framer-motion": "^11.2.10",
+    "isomorphic-dompurify": "^2.26.0",
     "next": "14.2.3",
     "next-sanity": "^9.4.2",
     "react": "^18",
     "react-dom": "^18",
-    "sanity": "^3.45.1"
+    "sanity": "^3.45.1",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@types/node": "^20",

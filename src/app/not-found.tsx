@@ -1,5 +1,7 @@
+// src/app/not-found.tsx
 import Link from 'next/link';
-import { Icon } from '@/components/ui/Icon';
+// הנתיב נכון, אין צורך בשינוי אם Icon.tsx נמצא ישירות תחת /components
+import { Icon } from '@/components/Icon'; 
 
 export default function NotFound() {
   return (

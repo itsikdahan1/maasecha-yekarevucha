@@ -1,14 +1,123 @@
+/* src/app/globals.css */
+
+/* ---------------------------------- */
+/*      הגדרות הבסיס של Tailwind      */
+/* ---------------------------------- */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+/* ---------------------------------- */
+/*      סגנונות בסיס של האתר         */
+/* ---------------------------------- */
 @layer base {
+  html {
+    @apply scroll-smooth;
+  }
   body {
-    @apply bg-brand-cream text-slate-700;
-    font-family: 'Assistant', sans-serif;
+    @apply bg-brand-cream font-sans text-slate-700 antialiased;
+    overflow-x: hidden; /* מניעת גלילה אופקית, מוגדר פעם אחת */
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold text-brand-dark;
+  }
+}
+
+
+/* ---------------------------------------------------- */
+/*      כללי CSS עבור תפריט הנגישות - חובה!          */
+/* ---------------------------------------------------- */
+/* כללים אלה מאפשרים את הפונקציונליות של תפריט הנגישות. */
+
+/* --- 1. כללים עבור ניגודיות גבוהה --- */
+:root.high-contrast {
+  --background-color: #000000;
+  --text-color: #ffffff;
+  --link-color: #FFFF00; /* צהוב בהיר לנראות מקסימלית */
+
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+}
+
+:root.high-contrast body,
+:root.high-contrast div,
+:root.high-contrast section,
+:root.high-contrast header,
+:root.high-contrast footer,
+:root.high-contrast main,
+:root.high-contrast nav,
+:root.high-contrast article,
+:root.high-contrast aside {
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+  border-color: var(--link-color) !important;
+}
+
+:root.high-contrast h1,
+:root.high-contrast h2,
+:root.high-contrast h3,
+:root.high-contrast h4,
+:root.high-contrast p,
+:root.high-contrast span,
+:root.high-contrast li,
+:root.high-contrast button,
+:root.high-contrast input,
+:root.high-contrast textarea,
+:root.high-contrast select {
+    color: var(--text-color) !important;
+    background-color: var(--background-color) !important;
+}
+
+:root.high-contrast a {
+  color: var(--link-color) !important;
+  text-decoration: underline !important;
+}
+
+:root.high-contrast svg {
+    fill: var(--text-color) !important;
+    stroke: var(--text-color) !important;
+}
+
+:root.high-contrast img {
+    filter: grayscale(100%) contrast(200%) !important;
+}
+
+/* --- 2. כלל עבור פונט קריא --- */
+:root.readable-font body, 
+:root.readable-font button, 
+:root.readable-font input,
+:root.readable-font a,
+:root.readable-font p,
+:root.readable-font h1,
+:root.readable-font h2,
+:root.readable-font h3,
+:root.readable-font h4 {
+    font-family: Arial, sans-serif !important;
+}
+
+/* --- 3. כלל עבור קו תחתון לקישורים --- */
+:root.underline-links a {
+    text-decoration: underline !important;
+}
+
+
+/* ---------------------------------- */
+/*          Utilities נוספים         */
+/* ---------------------------------- */
+@layer utilities {
+  .animate-pulse-slow {
+    animation: pulse-slow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
-  h1, h2, h3, h4, h5, h6, b, strong {
-    @apply font-bold text-brand-dark;
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: .9;
+      transform: scale(1.03);
+    }
   }
 }
