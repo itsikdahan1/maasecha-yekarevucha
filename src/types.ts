@@ -1,19 +1,22 @@
 // src/types.ts
+
+// עדכנו את הטיפוס Post
 export interface Post {
   _id: string;
   title: string;
   slug: { current: string };
-  author: any;
-  category: string;
+  authorName: string; // <-- שינינו את זה מ-author
+  categoryName: string; // <-- שינינו את זה מ-category
   excerpt: string;
   content: any[];
 }
 
+// שאר הטיפוסים נשארים זהים
 export interface Expert {
-  _id: string; // מומלץ להוסיף מזהה ייחודי
+  _id: string;
   name: string;
   role: string;
-  imageUrl?: string; // <-- הוספנו את השדה החסר
+  imageUrl?: string;
 }
 
 export interface Event {
@@ -48,3 +51,4 @@ export interface Testimonial {
   quote: string;
   imageUrl?: string;
 }
+

@@ -1,6 +1,6 @@
 // src/lib/sanity.ts
-import { createClient } from "next-sanity";
-import type { Post, Event, Faq, Testimonial, Webinar } from "@/types";
+import { createClient } from "@sanity/client";
+import type { Post, Event, Faq, Testimonial, Webinar, Expert } from "@/types";
 
 const client = createClient({
     projectId: "libeyywa", 
@@ -9,13 +9,32 @@ const client = createClient({
     useCdn: false,
 });
 
+// --- שאר הפונקציות נשארות זהות ---
+
 export async function getPosts(): Promise<Post[]> {
-    const query = `*[_type == "post"]{_id, title, slug, author, category, excerpt, content}`;
+    const query = `*[_type == "post"]{
+      _id,
+      title,
+      slug,
+      excerpt,
+      content,
+      "authorName": author->name,
+      "categoryName": category->name
+    }`;
     return client.fetch(query);
 }
 
 export async function getPost(slug: string): Promise<Post> {
-    const query = `*[_type == "post" && slug.current == $slug][0]{_id, title, slug, author, category, excerpt, content}`;
+    const query = `*[_type == "post" && slug.current == $slug][0]{
+        _id,
+        title,
+        slug,
+        excerpt,
+        content,
+        "authorName": author->name,
+        "categoryName": category->name,
+        mainImage
+    }`;
     return client.fetch(query, { slug });
 }
 
@@ -28,11 +47,9 @@ export async function getUpcomingEvents(): Promise<Event[]> {
     status,
     registrationUrl
   }`;
-  const events = await client.fetch(query);
-  return events;
+  return client.fetch(query);
 }
 
-// השאילתה המעודכנת שמושכת את כל השדות הנכונים
 export async function getWebinars(): Promise<Webinar[]> {
   const query = `*[_type == "webinar"] | order(date desc) {
     _id,
@@ -46,8 +63,9 @@ export async function getWebinars(): Promise<Webinar[]> {
   return client.fetch(query);
 }
 
+// --- הפונקציה הזו עודכנה ---
 export async function getFaqs(): Promise<Faq[]> {
-  const query = `*[_type == "faq"] | order(_createdAt asc) {
+  const query = `*[_type == "faq"] | order(order asc) {
     _id,
     question,
     answer
@@ -61,6 +79,16 @@ export async function getTestimonials(): Promise<Testimonial[]> {
     authorName,
     authorRole,
     quote,
+    "imageUrl": image.asset->url
+  }`;
+  return client.fetch(query);
+}
+
+export async function getExperts(): Promise<Expert[]> {
+  const query = `*[_type == "expert"] | order(order asc) {
+    _id,
+    name,
+    role,
     "imageUrl": image.asset->url
   }`;
   return client.fetch(query);
