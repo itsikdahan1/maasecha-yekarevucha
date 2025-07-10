@@ -11,7 +11,6 @@ interface BlogPostPageProps {
   };
 }
 
-// קומפוננטת שרת אסינכרונית שתופעל אוטומטית על ידי Next.js
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
     const { slug } = params;
     const post: Post | null = await getPost(slug);
@@ -35,9 +34,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                         <Icon name="arrowLeft" className="w-4 h-4 transform -scale-x-100" />
                         חזרה לכל המאמרים
                     </Link>
-                    <p className="mt-8 text-lg font-semibold text-brand-cyan">{post.category}</p>
+                    {/* התיקון כאן: השתמשנו ב-categoryName */}
+                    <p className="mt-8 text-lg font-semibold text-brand-cyan">{post.categoryName}</p>
                     <h1 className="mt-2 text-4xl sm:text-5xl font-bold text-brand-dark">{post.title}</h1>
-                    <p className="mt-6 text-lg text-brand-dark/60">נכתב על ידי: {post.author}</p>
+                    {/* התיקון כאן: השתמשנו ב-authorName */}
+                    <p className="mt-6 text-lg text-brand-dark/60">נכתב על ידי: {post.authorName}</p>
                 </div>
                 <div className="prose prose-lg lg:prose-xl mx-auto text-brand-dark/90 leading-relaxed text-right">
                     {post.content?.map((block: any) => (
@@ -49,7 +50,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     );
 }
 
-// פונקציה אופציונלית לשיפור ביצועים: יצירת מטא-דאטה דינמי
 export async function generateMetadata({ params }: BlogPostPageProps) {
   const post = await getPost(params.slug);
   if (!post) {
