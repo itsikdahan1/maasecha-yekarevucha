@@ -1,11 +1,15 @@
 // src/components/ExpertsSection.tsx
-import React from 'react';
-import { getExperts } from '@/lib/sanity';
+import React, { FC } from 'react';
+// הסרנו את הקריאה לשרת מכאן
 import type { Expert } from '@/types';
 
-export const ExpertsSection = async () => { 
-  const experts: Expert[] = await getExperts();
+// יצרנו ממשק ל-props
+interface ExpertsSectionProps {
+  experts: Expert[];
+}
 
+// הקומפוננטה כבר לא async ומקבלת את המומחים כ-prop
+export const ExpertsSection: FC<ExpertsSectionProps> = ({ experts }) => { 
   return (
     <section id="experts" className="py-24 sm:py-32 bg-brand-cream" dir="rtl">
       <div className="container mx-auto px-6 lg:px-8">
@@ -18,7 +22,6 @@ export const ExpertsSection = async () => {
             ההצלחה שלך היא המשימה של כולנו. לכן בנינו נבחרת של אנשי מקצוע מהשורה הראשונה, שילוו אותך בדרך.
           </p>
         </div>
-        {/* הוספנו את justify-center כדי למרכז את הפריטים כשיש פחות מ-3 */}
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto justify-center">
           {experts.map((expert) => (
             <div key={expert._id} className="bg-white p-8 rounded-2xl text-center transition-all duration-300 shadow-lg hover:shadow-slate-200 hover:-translate-y-2 border border-slate-100">

@@ -2,8 +2,7 @@
 'use client';
 
 import React, { FC } from 'react';
-// שינוי 1: הסרנו את הייבוא של Expert כי הוא לא בשימוש יותר בקומפוננטה הזו
-import type { Post } from '@/types';
+import type { Post, Expert } from '@/types'; // החזרנו את הייבוא של Expert
 
 import { HeroSection } from '@/components/HeroSection';
 import { WhyUsSection } from '@/components/WhyUsSection';
@@ -14,13 +13,14 @@ import { ExpertsSection } from '@/components/ExpertsSection';
 import { BlogSection } from '@/components/BlogSection';
 import { ContactSection } from '@/components/ContactSection';
 
-// שינוי 2: הסרנו את experts מה-props
+// הוספנו את experts ל-props
 interface HomePageClientProps {
   posts: Post[];
+  experts: Expert[];
 }
 
-// שינוי 3: הסרנו את experts מהפרמטרים של הפונקציה
-export const HomePageClient: FC<HomePageClientProps> = ({ posts }) => {
+// הוספנו את experts לפרמטרים והעברנו אותו הלאה
+export const HomePageClient: FC<HomePageClientProps> = ({ posts, experts }) => {
   return (
     <>
       <HeroSection />
@@ -28,8 +28,7 @@ export const HomePageClient: FC<HomePageClientProps> = ({ posts }) => {
       <ProductionEveningSection />
       <CommunitySection />
       <AiToolsSection />
-      {/* שינוי 4 (התיקון המרכזי): הסרנו את ה-prop מהקריאה לקומפוננטה */}
-      <ExpertsSection />
+      <ExpertsSection experts={experts} />
       <BlogSection posts={posts} />
       <ContactSection />
     </>
