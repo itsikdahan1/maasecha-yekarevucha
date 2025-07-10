@@ -26,7 +26,7 @@ export const AiToolsSection: FC = () => {
     const [conversationStarters, setConversationStarters] = useState('');
     const [isStarterLoading, setIsStarterLoading] = useState(false);
     
-    // ⬇️ כאן נמצא התיקון. הוספנו type annotations מדויקים לפרמטרים ⬇️
+    // This is the corrected function with proper types
     const callApi = async (prompt: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>, setResult: React.Dispatch<React.SetStateAction<string>>) => {
         setLoading(true);
         setResult('חושב...');
@@ -73,7 +73,6 @@ export const AiToolsSection: FC = () => {
         { id: 'starters', label: 'פתיחת שיחה' },
     ];
     
-    // The rest of your JSX remains exactly the same...
     return (
         <section id="ai-tools" className="py-24 sm:py-32 bg-white" dir="rtl">
             <div className="container mx-auto px-6 lg:px-8">
@@ -92,6 +91,7 @@ export const AiToolsSection: FC = () => {
                         ))}
                     </div>
                     <div className="bg-brand-cream/60 p-8 sm:p-10 rounded-2xl shadow-xl border border-slate-200/50">
+                        {/* ... The rest of your JSX remains the same ... */}
                         {activeTab === 'profile' && (
                             <div>
                                 <h3 className="text-2xl font-bold text-brand-dark mb-4">✨ עוזר ניסוח פרופיל אישי</h3>
