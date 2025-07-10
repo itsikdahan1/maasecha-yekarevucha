@@ -60,13 +60,10 @@ export const ProductionEveningSection: FC = () => {
           ))}
         </div>
 
-        {/* --- אזור הסדנאות בעיצוב המשודרג --- */}
         <div className="max-w-7xl mx-auto mt-24">
-            {/* התיקון המרכזי: items-start ליישור ו-gap ליצירת רווח */}
-            <div className="relative flex flex-col lg:flex-row items-start justify-center gap-12">
+            <div className="relative flex flex-col lg:flex-row items-center justify-center gap-12">
               
-                {/* סדנת גברים */}
-                <div className="w-full lg:w-[40%] bg-white p-10 rounded-2xl shadow-2xl border border-slate-200/80 z-10">
+                <div className="w-full lg:w-[40%] bg-white p-8 sm:p-10 rounded-2xl shadow-2xl border border-slate-200/80 z-10">
                     <h3 className="text-3xl font-bold text-brand-dark mb-8 text-center">{info.workshops.men.title}</h3>
                     <ul className="space-y-6">
                         {menWorkshopItems.map((item, index) => (
@@ -83,15 +80,14 @@ export const ProductionEveningSection: FC = () => {
                     </ul>
                 </div>
 
-                {/* עיגול הבונוס - ממוקם במרכז */}
-                <div className="w-48 h-48 bg-gradient-to-br from-brand-cyan to-cyan-600 rounded-full flex flex-col shrink-0 items-center justify-center text-center p-4 shadow-2xl z-20 text-white border-8 border-brand-cream lg:mt-16 animate-pulse-slow">
+                {/* ⬇️ התיקון כאן: הקטנו את העיגול למובייל ⬇️ */}
+                <div className="order-first lg:order-none w-36 h-36 lg:w-48 lg:h-48 bg-gradient-to-br from-brand-cyan to-cyan-600 rounded-full flex flex-col shrink-0 items-center justify-center text-center p-4 shadow-2xl z-20 text-white border-8 border-brand-cream lg:mt-16 animate-pulse-slow">
                     <Icon name="gift" className="w-10 h-10 mb-2"/>
                     <h4 className="text-2xl font-bold">בונוס</h4>
                     <p className="text-sm">מתנה לכל משתתף</p>
                 </div>
 
-                {/* סדנת נשים */}
-                <div className="w-full lg:w-[40%] bg-white p-10 rounded-2xl shadow-2xl border border-slate-200/80 z-10">
+                <div className="w-full lg:w-[40%] bg-white p-8 sm:p-10 rounded-2xl shadow-2xl border border-slate-200/80 z-10">
                     <h3 className="text-3xl font-bold text-brand-dark mb-8 text-center">{info.workshops.women.title}</h3>
                     <ul className="space-y-6">
                         {womenWorkshopItems.map((item, index) => (

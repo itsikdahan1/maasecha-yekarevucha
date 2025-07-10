@@ -1,7 +1,7 @@
 /* src/app/globals.css */
 
 /* ---------------------------------- */
-/*      הגדרות הבסיס של Tailwind      */
+/* הגדרות הבסיס של Tailwind      */
 /* ---------------------------------- */
 @tailwind base;
 @tailwind components;
@@ -9,15 +9,16 @@
 
 
 /* ---------------------------------- */
-/*      סגנונות בסיס של האתר         */
+/* סגנונות בסיס של האתר         */
 /* ---------------------------------- */
 @layer base {
   html {
     @apply scroll-smooth;
+	overflow-x: hidden;
   }
   body {
     @apply bg-brand-cream font-sans text-slate-700 antialiased;
-    overflow-x: hidden; /* מניעת גלילה אופקית, מוגדר פעם אחת */
+    overflow-x: hidden;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold text-brand-dark;
@@ -26,15 +27,12 @@
 
 
 /* ---------------------------------------------------- */
-/*      כללי CSS עבור תפריט הנגישות - חובה!          */
+/* כללי CSS עבור תפריט הנגישות                   */
 /* ---------------------------------------------------- */
-/* כללים אלה מאפשרים את הפונקציונליות של תפריט הנגישות. */
-
-/* --- 1. כללים עבור ניגודיות גבוהה --- */
 :root.high-contrast {
   --background-color: #000000;
   --text-color: #ffffff;
-  --link-color: #FFFF00; /* צהוב בהיר לנראות מקסימלית */
+  --link-color: #FFFF00;
 
   background-color: var(--background-color) !important;
   color: var(--text-color) !important;
@@ -83,7 +81,6 @@
     filter: grayscale(100%) contrast(200%) !important;
 }
 
-/* --- 2. כלל עבור פונט קריא --- */
 :root.readable-font body, 
 :root.readable-font button, 
 :root.readable-font input,
@@ -96,14 +93,13 @@
     font-family: Arial, sans-serif !important;
 }
 
-/* --- 3. כלל עבור קו תחתון לקישורים --- */
 :root.underline-links a {
     text-decoration: underline !important;
 }
 
 
 /* ---------------------------------- */
-/*          Utilities נוספים         */
+/* Utilities נוספים         */
 /* ---------------------------------- */
 @layer utilities {
   .animate-pulse-slow {
