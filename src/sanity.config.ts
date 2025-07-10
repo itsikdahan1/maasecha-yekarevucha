@@ -3,14 +3,14 @@ import { defineConfig } from 'sanity'
 import { deskTool } from 'sanity/desk'
 
 // --- ייבוא כל ה-Schemas שלך ---
-// ודא שהקבצים האלה קיימים בתיקייה: src/sanity/schemas
-import blockContent from './sanity/schemas/blockContent.js'
-import category from './sanity/schemas/category.js'
-import post from './sanity/schemas/post.js'
-import expert from './sanity/schemas/expert.js'
-import event from './sanity/schemas/event.js'
-import faq from './sanity/schemas/faq.ts'
-import testimonial from './sanity/schemas/testimonial.ts'
+// ⬇️ כאן נמצא התיקון: הסרנו את הסיומות .js ו- .ts ⬇️
+import blockContent from './sanity/schemas/blockContent'
+import category from './sanity/schemas/category'
+import post from './sanity/schemas/post'
+import expert from './sanity/schemas/expert'
+import event from './sanity/schemas/event'
+import faq from './sanity/schemas/faq'
+import testimonial from './sanity/schemas/testimonial'
 
 
 // --- הוספת ה-Schemas למערך ---

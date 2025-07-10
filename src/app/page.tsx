@@ -1,6 +1,7 @@
 // src/app/page.tsx
+
+// שינוי 1: הסרנו את הייבוא של 'experts' כי אין בו יותר צורך כאן
 import { getPosts } from '@/lib/sanity';
-import { experts } from '@/lib/data';
 import { HomePageClient } from '@/components/HomePageClient';
 import type { Post } from '@/types';
 
@@ -8,6 +9,7 @@ export default async function HomePage() {
   const posts: Post[] = await getPosts();
   
   return (
-    <HomePageClient posts={posts} experts={experts} />
+    // שינוי 2: הסרנו את ה-prop של experts מהקריאה לקומפוננטה
+    <HomePageClient posts={posts} />
   );
 }
