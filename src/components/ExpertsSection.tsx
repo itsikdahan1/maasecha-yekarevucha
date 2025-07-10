@@ -1,6 +1,8 @@
 // src/components/ExpertsSection.tsx
 import React, { FC } from 'react';
-import { experts } from '@/lib/data';
+// שים לב: הקובץ הזה מייבא נתונים מקובץ סטטי.
+// עליך לוודא שהקובץ 'src/lib/data.ts' מכיל את השדות המעודכנים.
+import { experts } from '@/lib/data'; 
 import type { Expert } from '@/types';
 
 interface ExpertsSectionProps {
@@ -21,8 +23,12 @@ export const ExpertsSection: FC<ExpertsSectionProps> = ({ experts }) => (
       </div>
       <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
         {experts.map((expert) => (
-          <div key={expert.name} className="bg-white p-8 rounded-2xl text-center transition-all duration-300 shadow-lg hover:shadow-slate-200 hover:-translate-y-2 border border-slate-100">
-            <img className="w-32 h-32 rounded-full mx-auto ring-4 ring-white shadow-lg" src={expert.imageUrl} alt={`תמונה של ${expert.name}`} />
+          <div key={expert._id} className="bg-white p-8 rounded-2xl text-center transition-all duration-300 shadow-lg hover:shadow-slate-200 hover:-translate-y-2 border border-slate-100">
+            <img 
+              className="w-32 h-32 rounded-full mx-auto ring-4 ring-white shadow-lg object-cover" 
+              src={expert.imageUrl || 'https://placehold.co/128x128/06b6d4/white?text=מומחה'} // <-- הוספנו תמונת גיבוי
+              alt={`תמונה של ${expert.name}`} 
+            />
             <h3 className="mt-6 text-xl font-semibold text-brand-dark">{expert.name}</h3>
             <p className="mt-1 text-brand-cyan font-medium">{expert.role}</p>
           </div>

@@ -1,13 +1,12 @@
 // src/lib/sanity.ts
 import { createClient } from "next-sanity";
-import type { Post, Event } from "@/types";
+import type { Post, Event, Faq, Testimonial, Webinar } from "@/types";
 
 const client = createClient({
-    // הדבק כאן את ה-ID האמיתי שלך
     projectId: "libeyywa", 
     dataset: "production",
-    apiVersion: "2024-01-01", // השאר תאריך זה, הוא מציין את גרסת ה-API
-    useCdn: false, // `false` אם אתה משתמש ב-fetch בצד השרת (מומלץ)
+    apiVersion: "2024-01-01",
+    useCdn: false,
 });
 
 export async function getPosts(): Promise<Post[]> {
@@ -33,7 +32,20 @@ export async function getUpcomingEvents(): Promise<Event[]> {
   return events;
 }
 
-// ... בסוף הקובץ src/lib/sanity.ts
+// השאילתה המעודכנת שמושכת את כל השדות הנכונים
+export async function getWebinars(): Promise<Webinar[]> {
+  const query = `*[_type == "webinar"] | order(date desc) {
+    _id,
+    title,
+    date,
+    speaker,
+    description,
+    link,
+    status
+  }`;
+  return client.fetch(query);
+}
+
 export async function getFaqs(): Promise<Faq[]> {
   const query = `*[_type == "faq"] | order(_createdAt asc) {
     _id,
@@ -42,7 +54,7 @@ export async function getFaqs(): Promise<Faq[]> {
   }`;
   return client.fetch(query);
 }
-// ... בסוף הקובץ src/lib/sanity.ts
+
 export async function getTestimonials(): Promise<Testimonial[]> {
   const query = `*[_type == "testimonial"] | order(_createdAt desc) {
     _id,

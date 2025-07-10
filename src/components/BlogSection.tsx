@@ -23,8 +23,8 @@ export const BlogSection: FC<BlogSectionProps> = ({ posts }) => (
       <div className="max-w-6xl mx-auto grid gap-8 lg:grid-cols-3">
         {posts && posts.length > 0 ? posts.map((post) => (
           <Link
-            key={post.slug}
-            href={`/blog/${post.slug}`}
+            key={post._id} // <-- התיקון: שימוש ב-ID הייחודי של הפוסט
+            href={`/blog/${post.slug.current}`} // <-- התיקון: שימוש בערך הנכון של ה-slug
             className="group block text-right bg-brand-cream/70 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-slate-100"
           >
             <div className="p-8">

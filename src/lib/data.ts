@@ -7,14 +7,12 @@ export const productionEvening = {
     subtitle: "ערב הפקה. לא עוד דמי רישום",
     description: "אנו מאמינים שהדרך לחתונה מתחילה בהשקעה אמיתית. לכן, יצרנו ערב הפקה יוקרתי ומעצים, המעניק כלים מעשיים, חוויה מקצועית, ופרופיל וידאו אותנטי שמחליף אלף תמונות.",
     
-    // --- החלק הקריטי שהיה חסר ותוקן כעת ---
     timeline: [
         { name: "קבלת פנים ובר מפנק", icon: "coffee", description: "מתחילים באווירה נינוחה עם כיבוד עשיר ונטוורקינג איכותי." },
         { name: "הרצאות העשרה", icon: "mic", description: "סדנאות ממוקדות וכלים פרקטיים מפי נבחרת המומחים שלנו." },
         { name: "צילום פרופיל וידאו", icon: "camera", description: "צילום דיסקרטי ואישי באווירה תומכת, שמבליט את האותנטיות שלכם." },
         { name: "מתנת פרימיום", icon: "gift", description: "כל משתתף ומשתתפת יוצאים עם מתנה יוקרתית מאיתנו." },
     ],
-    // --- סוף התיקון ---
 
     workshops: {
       women: {
@@ -38,7 +36,8 @@ export const productionEvening = {
 };
 
 export const experts: Expert[] = [
-    { name: "רב ויועץ זוגי", role: "הכנה רוחנית ומעשית", imageUrl: "https://placehold.co/128x128/e0f2f7/083344?text=R" },
-    { name: "מומחה לתקשורת", role: "כלים פרקטיים לשיחה", imageUrl: "https://placehold.co/128x128/e0f2f7/083344?text=M" },
-    { name: "סטייליסטית", role: "שידור המסר הנכון", imageUrl: "https://placehold.co/128x128/e0f2f7/083344?text=S" },
+    // הוספנו _id לכל מומחה
+    { _id: "1", name: "רב ויועץ זוגי", role: "הכנה רוחנית ומעשית", imageUrl: "https://placehold.co/128x128/e0f2f7/083344?text=R" },
+    { _id: "2", name: "מומחה לתקשורת", role: "כלים פרקטיים לשיחה", imageUrl: "https://placehold.co/128x128/e0f2f7/083344?text=M" },
+    { _id: "3", name: "סטייליסטית", role: "שידור המסר הנכון", imageUrl: "https://placehold.co/128x128/e0f2f7/083344?text=S" },
 ];

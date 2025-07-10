@@ -1,8 +1,9 @@
 // src/app/webinars/page.tsx
 
 import { getWebinars } from "@/lib/sanity";
-import { Icon } from "@/components/ui/Icon";
+import { Icon } from "@/components/Icon"; // <-- התיקון המרכזי
 import Link from "next/link";
+import { Webinar } from "@/types"; // ייבוא הטיפוס הנכון
 
 // הגדרת המטא-דאטה הספציפית לעמוד הוובינרים
 export const metadata = {
@@ -13,7 +14,7 @@ export const metadata = {
 // זהו רכיב שרת, הוא יכול להיות אסינכרוני ולא צריך 'use client'
 export default async function WebinarsPage() {
     // אחזור הנתונים מתבצע כאן, בצד השרת
-    const webinars = await getWebinars();
+    const webinars: Webinar[] = await getWebinars();
 
     const formatWebinarDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -21,7 +22,7 @@ export default async function WebinarsPage() {
     };
     
     const liveOrNextWebinar = webinars.find(w => w.status === 'live') || webinars[0];
-    const upcomingWebinars = webinars.filter(w => w.id !== liveOrNextWebinar?.id);
+    const upcomingWebinars = webinars.filter(w => w._id !== liveOrNextWebinar?._id);
 
     return (
         <section className="py-24 sm:py-32 bg-white min-h-screen">
@@ -43,7 +44,7 @@ export default async function WebinarsPage() {
                         <p className="text-slate-600 mt-2 text-lg">עם {liveOrNextWebinar.speaker}</p>
                         <p className="font-semibold text-slate-800 mt-4">{formatWebinarDate(liveOrNextWebinar.date)}</p>
                         <p className="text-slate-700 mt-4 leading-relaxed">{liveOrNextWebinar.description}</p>
-                        <Link href={liveOrNextWebinar.link} target="_blank" rel="noopener noreferrer" className="inline-block mt-6 px-8 py-4 text-lg font-semibold text-white bg-slate-900 rounded-xl hover:bg-slate-700 transition-colors shadow-lg">
+                        <Link href={liveOrNextWebinar.link || '#'} target="_blank" rel="noopener noreferrer" className="inline-block mt-6 px-8 py-4 text-lg font-semibold text-white bg-slate-900 rounded-xl hover:bg-slate-700 transition-colors shadow-lg">
                            {liveOrNextWebinar.status === 'live' ? 'הצטרפות לשידור' : 'להרשמה וקבלת תזכורת'}
                         </Link>
                     </div>
@@ -56,12 +57,12 @@ export default async function WebinarsPage() {
                         <h3 className="text-2xl font-bold text-slate-800 text-center mb-8">מפגשים קרובים נוספים</h3>
                         <div className="space-y-6">
                             {upcomingWebinars.map(webinar => (
-                                <div key={webinar.id} className="bg-slate-50 p-6 rounded-xl border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <div key={webinar._id} className="bg-slate-50 p-6 rounded-xl border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                     <div>
                                         <h4 className="text-xl font-bold text-slate-800">{webinar.title}</h4>
                                         <p className="text-slate-500">{formatWebinarDate(webinar.date)}</p>
                                     </div>
-                                    <Link href={webinar.link} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 px-5 py-2.5 font-semibold bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors">הרשמה</Link>
+                                    <Link href={webinar.link || '#'} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 px-5 py-2.5 font-semibold bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors">הרשמה</Link>
                                 </div>
                             ))}
                         </div>

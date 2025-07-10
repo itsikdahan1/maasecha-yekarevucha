@@ -1,9 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 
-export const useIntersectionObserver = (options) => {
-    const [elements, setElements] = useState([]);
-    const [entries, setEntries] = useState([]);
-    const observer = useRef(null);
+// הגדרת הטיפוס עבור האופציות של IntersectionObserver
+type IntersectionObserverOptions = IntersectionObserverInit;
+
+// הגדרת הטיפוס לערך המוחזר מה-hook
+type UseIntersectionObserverReturn = [
+    Dispatch<SetStateAction<(Element | null)[]>>, 
+    IntersectionObserverEntry[]
+];
+
+export const useIntersectionObserver = (options: IntersectionObserverOptions): UseIntersectionObserverReturn => {
+    const [elements, setElements] = useState<(Element | null)[]>([]);
+    const [entries, setEntries] = useState<IntersectionObserverEntry[]>([]);
+    
+    const observer = useRef<IntersectionObserver | null>(null);
 
     useEffect(() => {
         if (observer.current) {
