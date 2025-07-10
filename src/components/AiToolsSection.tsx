@@ -27,8 +27,7 @@ export const AiToolsSection: FC = () => {
     const [isStarterLoading, setIsStarterLoading] = useState(false);
     
     // This is the corrected function with proper types
-    const callApi = async (prompt: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>, setResult: React.Dispatch<React.SetStateAction<string>>) => {
-        setLoading(true);
+    const callApi = async (prompt: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>, setResult: React.Dispatch<React.SetStateAction<string>>) => {        setLoading(true);
         setResult('חושב...');
 
         try {
