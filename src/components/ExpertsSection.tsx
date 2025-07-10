@@ -1,14 +1,10 @@
-// src/components/ExpertsSection.tsx
 import React, { FC } from 'react';
-// הסרנו את הקריאה לשרת מכאן
 import type { Expert } from '@/types';
 
-// יצרנו ממשק ל-props
 interface ExpertsSectionProps {
   experts: Expert[];
 }
 
-// הקומפוננטה כבר לא async ומקבלת את המומחים כ-prop
 export const ExpertsSection: FC<ExpertsSectionProps> = ({ experts }) => { 
   return (
     <section id="experts" className="py-24 sm:py-32 bg-brand-cream" dir="rtl">

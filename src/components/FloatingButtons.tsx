@@ -16,6 +16,41 @@ export const FloatingButtons: FC = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const buttons = [
+        { 
+            label: "וואטסאפ", 
+            icon: "whatsappSolid", 
+            action: () => window.open(`https://wa.me/972553080685?text=${whatsappText}`, '_blank'), 
+            isLink: true,
+            bgColor: "bg-green-500 hover:bg-green-600",
+            ariaLabel: "יצירת קשר בוואטסאפ"
+        },
+        { 
+            label: "יועץ AI", 
+            icon: "aiLetters", // ⬇️ התיקון כאן: החלפנו לאייקון 'aiLetters' ⬇️
+            action: () => setIsChatOpen(true), 
+            isLink: false,
+            bgColor: "bg-brand-cyan hover:bg-cyan-600",
+            ariaLabel: "פתיחת צ'אט עם יועץ חכם"
+        },
+        { 
+            label: "נגישות", 
+            icon: "accessibilityNew", 
+            action: () => setIsAccessibilityOpen(true), 
+            isLink: false,
+            bgColor: "bg-slate-700 hover:bg-slate-800",
+            ariaLabel: "פתיחת תפריט נגישות"
+        },
+        { 
+            label: "למעלה", 
+            icon: "arrowUp", 
+            action: scrollToTop, 
+            isLink: false,
+            bgColor: "bg-brand-dark hover:bg-slate-700",
+            ariaLabel: "חזרה לראש העמוד"
+        },
+    ];
+
     return (
         <>
             <AnimatePresence>
@@ -23,46 +58,24 @@ export const FloatingButtons: FC = () => {
                 {isAccessibilityOpen && <AccessibilityMenu toggle={() => setIsAccessibilityOpen(false)} />}
             </AnimatePresence>
             
-            {/* ⬇️ התיקון כאן: שינינו את הרווח בין הכפתורים ל-gap-3 ⬇️ */}
-            <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-center gap-3">
-                {/* ⬇️ התיקון כאן: שינינו את הגודל ל-w-14 h-14 במובייל ול-w-16 h-16 בגדולים יותר ⬇️ */}
-                <a 
-                    href={`https://wa.me/972553080685?text=${whatsappText}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="group relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg hover:bg-green-600 hover:scale-110 transition-all duration-300" 
-                    aria-label="יצירת קשר בוואטסאפ"
-                    title="יצירת קשר בוואטסאפ"
-                >
-                    <Icon name="whatsappSolid" className="w-7 h-7 sm:w-8 sm:h-8"/>
-                </a>
-                
-                <button 
-                    onClick={() => setIsChatOpen(true)} 
-                    className="group relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-brand-cyan text-white flex items-center justify-center shadow-lg hover:bg-cyan-600 hover:scale-110 transition-all duration-300" 
-                    aria-label="פתיחת צ'אט עם יועץ חכם"
-                    title="צ'אט עם יועץ AI"
-                >
-                    <Icon name="sparkles" className="w-7 h-7 sm:w-8 sm:h-8"/>
-                </button>
+            <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-3">
+                {buttons.map((button) => {
+                    const commonClasses = "flex items-center justify-center h-14 w-14 md:w-auto md:px-4 rounded-full text-white font-semibold shadow-lg transition-all duration-300 transform hover:scale-105";
+                    
+                    const buttonContent = (
+                        <>
+                            {/* שינינו את גודל האייקון כדי להתאים אותו לטקסט */}
+                            <Icon name={button.icon} className="w-8 h-8 md:w-7 md:h-7 flex-shrink-0"/>
+                            <span className="text-sm hidden md:inline mr-2">{button.label}</span>
+                        </>
+                    );
+                    
+                    if (button.isLink) {
+                        return ( <a key={button.label} href="#" onClick={(e) => { e.preventDefault(); button.action(); }} className={`${commonClasses} ${button.bgColor}`} title={button.label} aria-label={button.ariaLabel}>{buttonContent}</a> );
+                    }
 
-                <button 
-                    onClick={() => setIsAccessibilityOpen(true)} 
-                    className="group relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-700 text-white flex items-center justify-center shadow-lg hover:bg-slate-800 hover:scale-110 transition-all duration-300" 
-                    aria-label="פתיחת תפריט נגישות"
-                    title="תפריט נגישות"
-                >
-                    <Icon name="accessibilityNew" className="w-7 h-7 sm:w-8 sm:h-8"/>
-                </button>
-
-                <button 
-                    onClick={scrollToTop} 
-                    className="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-brand-dark text-white flex items-center justify-center shadow-lg hover:bg-slate-700 hover:scale-110 transition-all duration-300" 
-                    aria-label="חזרה לראש העמוד"
-                    title="חזרה לראש העמוד"
-                >
-                    <Icon name="arrowUp" className="w-6 h-6 sm:w-7 sm:h-7"/>
-                </button>
+                    return ( <button key={button.label} onClick={button.action} className={`${commonClasses} ${button.bgColor}`} aria-label={button.ariaLabel} title={button.label}>{buttonContent}</button> );
+                })}
             </div>
         </>
     );

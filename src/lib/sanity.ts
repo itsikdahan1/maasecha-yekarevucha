@@ -6,10 +6,9 @@ const client = createClient({
     projectId: "libeyywa", 
     dataset: "production",
     apiVersion: "2024-01-01",
-    useCdn: false,
+    // ⬇️ השינוי החשוב ביותר: הפעלת ה-CDN לשיפור מהירות ⬇️
+    useCdn: true,
 });
-
-// --- שאר הפונקציות נשארות זהות ---
 
 export async function getPosts(): Promise<Post[]> {
     const query = `*[_type == "post"]{
@@ -33,7 +32,7 @@ export async function getPost(slug: string): Promise<Post> {
         content,
         "authorName": author->name,
         "categoryName": category->name,
-        mainImage
+        "mainImageUrl": mainImage.asset->url
     }`;
     return client.fetch(query, { slug });
 }
@@ -63,7 +62,6 @@ export async function getWebinars(): Promise<Webinar[]> {
   return client.fetch(query);
 }
 
-// --- הפונקציה הזו עודכנה ---
 export async function getFaqs(): Promise<Faq[]> {
   const query = `*[_type == "faq"] | order(order asc) {
     _id,
