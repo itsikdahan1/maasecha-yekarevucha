@@ -1,7 +1,7 @@
 // src/app/webinars/page.tsx
 
 import { getWebinars } from "@/lib/sanity";
-import Icon from "@/components/ui/Icon";
+import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 
 // הגדרת המטא-דאטה הספציפית לעמוד הוובינרים
