@@ -90,7 +90,7 @@ export const AIChat: FC<AIChatProps> = ({ toggle }) => {
             const data = await response.json();
             setMessages(prev => {
                 const thinkingRemoved = prev.filter(m => !m.isThinking);
-                const newAiMessage = { id: Date.now(), text: response.ok ? data.result : (data.error || "אופס, משהו השתבש."), sender: 'ai' };
+            const newAiMessage = { id: Date.now(), text: response.ok ? data.result : (data.error || "אופס, משהו השתבש."), sender: 'ai' as const };
                 return [...thinkingRemoved, newAiMessage];
             });
         } catch (error) {
