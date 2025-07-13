@@ -8,6 +8,7 @@ type IconProps = {
 
 export const Icon: FC<IconProps> = ({ name, className }) => {
     const icons: { [key: string]: React.ReactNode } = {
+		aiLogo: <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13.88 16.74h1.54l-3.42-8.48h-1.4l-3.42 8.48h1.54l.86-2.26h3.04l.86 2.26Zm-3.1-3.54 1.3-3.4 1.3 3.4h-2.6Zm7.42 3.54h1.4V8.26h-1.4v8.48Z"/></svg>,
 	    aiLetters: <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold">AI</text></svg>,
 		lightBulb: <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2ZM12 17v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 14a6 6 0 0 0 4.24-1.76a6 6 0 0 0 0-8.48a6 6 0 0 0-8.48 0a6 6 0 0 0 0 8.48A6 6 0 0 0 12 14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>,
 		aiChip: <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10V7a2 2 0 0 1 2-2h3M4 14v3a2 2 0 0 0 2 2h3M14 4h3a2 2 0 0 1 2 2v3M14 20h3a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12a3 3 0 1 0-3-3m0 6a3 3 0 1 0 3 3m-3-3a3 3 0 1 1 3-3m-3 3a3 3 0 1 0 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>,

@@ -12,23 +12,36 @@ const renderFormattedText = (text: string) => {
     return <div className="text-brand-dark/80 space-y-3 leading-relaxed" dangerouslySetInnerHTML={{ __html: html }} />;
 };
 
+// שאלות השאלון המודרך
+const profileQuestions = [
+    { id: 'q1', text: 'איך נראה ערב שישי אידיאלי עבורך?' },
+    { id: 'q2', text: 'מהי התכונה החשובה ביותר שאת/ה מחפש/ת בבן/בת זוג?' },
+    { id: 'q3', text: 'ספר/י על רגע של נחת שהיה לך לאחרונה.' },
+];
+
 export const AiToolsSection: FC = () => {
     const [activeTab, setActiveTab] = useState('profile');
-    const [profileKeywords, setProfileKeywords] = useState('');
+    
+    // State for Profile Analyzer
+    const [profileAnswers, setProfileAnswers] = useState<{ [key: string]: string }>({});
     const [profileSuggestion, setProfileSuggestion] = useState('');
     const [isProfileLoading, setIsProfileLoading] = useState(false);
+
+    // State for Date Ideas
     const [dateRegion, setDateRegion] = useState('ירושלים');
     const [dateBudget, setDateBudget] = useState('נמוך');
     const [dateAtmosphere, setDateAtmosphere] = useState('רגועה');
     const [dateIdeas, setDateIdeas] = useState('');
     const [isDateLoading, setIsDateLoading] = useState(false);
+
+    // State for Conversation Starters
     const [starterInterests, setStarterInterests] = useState('');
     const [conversationStarters, setConversationStarters] = useState('');
     const [isStarterLoading, setIsStarterLoading] = useState(false);
     
-    // This is the corrected function with proper types
-    const callApi = async (prompt: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>, setResult: React.Dispatch<React.SetStateAction<string>>) => {        setLoading(true);
-        setResult('חושב...');
+    const callApi = async (prompt: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>, setResult: React.Dispatch<React.SetStateAction<string>>) => {
+        setLoading(true);
+        setResult('היועץ החכם חושב לרגע...');
 
         try {
             const response = await fetch('/api/generate', {
@@ -40,7 +53,7 @@ export const AiToolsSection: FC = () => {
             if (response.ok) {
                 setResult(data.result);
             } else {
-                throw new Error(data.error || "Something went wrong");
+                throw new Error(data.error || "משהו השתבש, נסו שוב.");
             }
         } catch (error) {
             setResult('אופס, משהו השתבש. נסה שוב מאוחר יותר.');
@@ -49,9 +62,28 @@ export const AiToolsSection: FC = () => {
         }
     };
 
-    const handleGenerateProfile = () => {
-        if (!profileKeywords.trim()) { setProfileSuggestion('אנא הזן כמה מילים על עצמך.'); return; }
-        const prompt = `נסח מחדש את הטקסט הבא לפרופיל היכרויות אישי, חם ומזמין. הדגש את התכונות החיוביות. הטקסט: "${profileKeywords}"`;
+    const handleAnswerChange = (questionId: string, answer: string) => {
+        setProfileAnswers(prev => ({ ...prev, [questionId]: answer }));
+    };
+
+    const handleGenerateProfileAnalysis = () => {
+        const allAnswered = profileQuestions.every(q => profileAnswers[q.id]?.trim());
+        if (!allAnswered) {
+            setProfileSuggestion('כדי לקבל ניתוח מדויק, אנא ענה/י על כל השאלות.');
+            return;
+        }
+
+        const answersText = profileQuestions.map(q => `שאלה: ${q.text}\nתשובה: ${profileAnswers[q.id]}`).join('\n\n');
+        
+        // פרומפט ייעודי לניתוח אישיות
+        const prompt = `
+        אתה "היועץ החכם" של "מעשיך יקרבוך". תפקידך לנתח את התשובות הבאות של משתמש/ת וליצור סיכום אישיות חם, מזמין ומחמיא עבור פרופיל ההיכרויות שלו/ה. 
+        התמקד בתכונות החיוביות שעולות מהתשובות. התשובה צריכה להיות פסקה אחת קצרה (2-3 משפטים).
+        התשובות הן:
+        ${answersText}
+
+        סיכום היועץ החכם:
+        `;
         callApi(prompt, setIsProfileLoading, setProfileSuggestion);
     };
 
@@ -67,7 +99,7 @@ export const AiToolsSection: FC = () => {
     };
 
     const tabs = [
-        { id: 'profile', label: 'עוזר ניסוח פרופיל' },
+        { id: 'profile', label: 'יועץ הפרופיל החכם' },
         { id: 'dateIdeas', label: 'רעיונות לפגישה' },
         { id: 'starters', label: 'פתיחת שיחה' },
     ];
@@ -90,16 +122,31 @@ export const AiToolsSection: FC = () => {
                         ))}
                     </div>
                     <div className="bg-brand-cream/60 p-8 sm:p-10 rounded-2xl shadow-xl border border-slate-200/50">
-                        {/* ... The rest of your JSX remains the same ... */}
                         {activeTab === 'profile' && (
                             <div>
-                                <h3 className="text-2xl font-bold text-brand-dark mb-4">✨ עוזר ניסוח פרופיל אישי</h3>
-                                <p className="text-brand-dark/70 mb-6">כתבו כמה מילים על עצמכם, וה-AI ינסח עבורכם הצעה לפסקה שתציג אתכם בצורה הטובה ביותר</p>
-                                <textarea value={profileKeywords} onChange={(e) => setProfileKeywords(e.target.value)} placeholder="לדוגמה: אוהב לטייל בארץ, ללמוד דף יומי, חשוב לי בית עם שמחה..." className="w-full h-32 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan transition bg-white" />
-                                <button onClick={handleGenerateProfile} disabled={isProfileLoading} className="mt-4 w-full bg-brand-dark text-white px-6 py-3.5 rounded-lg text-lg font-semibold hover:bg-slate-700 transition-all shadow-md flex items-center justify-center gap-2 disabled:bg-slate-400">
-                                    {isProfileLoading ? 'מנסח פרופיל...' : '✨ נסח לי פרופיל'}
+                                <h3 className="text-2xl font-bold text-brand-dark mb-4">✨ יועץ הפרופיל החכם</h3>
+                                <p className="text-brand-dark/70 mb-6">ענו על מספר שאלות קצרות, והיועץ החכם שלנו יפיק עבורכם סיכום אישיותי שיאיר את התכונות הטובות ביותר שלכם.</p>
+                                <div className="space-y-6">
+                                    {profileQuestions.map(q => (
+                                        <div key={q.id}>
+                                            <label className="block text-md font-semibold text-brand-dark/90 mb-2">{q.text}</label>
+                                            <textarea 
+                                                onChange={(e) => handleAnswerChange(q.id, e.target.value)} 
+                                                placeholder="התשובה שלך..." 
+                                                className="w-full h-24 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan transition bg-white" 
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                                <button onClick={handleGenerateProfileAnalysis} disabled={isProfileLoading} className="mt-6 w-full bg-brand-dark text-white px-6 py-3.5 rounded-lg text-lg font-semibold hover:bg-slate-700 transition-all shadow-md flex items-center justify-center gap-2 disabled:bg-slate-400">
+                                    {isProfileLoading ? 'מנתח את תשובותיך...' : '✨ הפק סיכום יועץ חכם'}
                                 </button>
-                                {profileSuggestion && <div className="mt-6 p-4 bg-white rounded-lg border border-slate-200">{renderFormattedText(profileSuggestion)}</div>}
+                                {profileSuggestion && (
+                                    <div className="mt-6 p-6 bg-white rounded-lg border border-slate-200">
+                                        <h4 className="font-bold text-brand-dark flex items-center gap-2"><Icon name="sparkles" className="w-5 h-5 text-brand-cyan"/> סיכום היועץ החכם:</h4>
+                                        <div className="mt-2">{renderFormattedText(profileSuggestion)}</div>
+                                    </div>
+                                )}
                             </div>
                         )}
                         {activeTab === 'dateIdeas' && (

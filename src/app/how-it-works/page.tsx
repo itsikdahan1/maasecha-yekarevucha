@@ -3,30 +3,12 @@ import { Icon } from "@/components/Icon";
 import Link from 'next/link';
 import { getUpcomingEvents } from '@/lib/sanity';
 import type { Event } from '@/types';
-import { PortableText } from '@portabletext/react';
+import { InteractiveProcessSteps } from "@/components/InteractiveProcessSteps"; // ייבוא הרכיב החדש
 
 export const metadata = {
   title: "איך זה עובד? | מעשיך יקרבוך",
   description: "הצצה אל מאחורי הקלעים של התהליך הייחודי שלנו - מהרישום החכם, דרך ערב ההפקה ועד לקהילה התומכת.",
 };
-
-const processSteps = [
-    {
-      icon: "bot",
-      title: "שלב 1: הרישום החכם",
-      description: "הכל מתחיל בשיחה עם הבוט החכם שלנו בוואטסאפ. הוא ישאל את השאלות הנכונות, יבין מי אתם, ויבנה לכם פרופיל ראשוני מדויק. בלי טפסים ארוכים ומייגעים."
-    },
-    {
-      icon: "camera",
-      title: "שלב 2: ערב ההפקה",
-      description: "זהו לב המיזם. יום מרוכז וחוויתי הכולל סדנאות מעשיות עם מומחים, צילום פרופיל וידאו מקצועי, ופגישות איכותיות באווירה נעימה ומכבדת."
-    },
-    {
-      icon: "users",
-      title: "שלב 3: הקהילה והפלטפורמה",
-      description: "לאחר ערב ההפקה, אתם מצטרפים לפלטפורמה הסגורה שלנו ולקהילה התומכת. כאן תקבלו הצעות מותאמות, תשתתפו בוובינרים ותקבלו ליווי עד לחופה."
-    }
-];
 
 const StatusBadge = ({ status }: { status: Event['status'] }) => {
     const statusMap = {
@@ -67,32 +49,11 @@ export default async function HowItWorksPage() {
             </p>
           </div>
   
-          <div className="relative mt-20 max-w-5xl mx-auto">
-            <div className="absolute left-1/2 top-0 h-full w-0.5 bg-slate-200" aria-hidden="true"></div>
-            <div className="space-y-16">
-              {processSteps.map((step, index) => (
-                <div key={index} className="relative flex items-center">
-                  <div className={`flex w-full items-center gap-8 ${index % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
-                    <div className="hidden md:flex flex-shrink-0 bg-brand-cyan text-white w-28 h-28 rounded-full items-center justify-center shadow-lg z-10">
-                      <Icon name={step.icon} className="w-14 h-14" />
-                    </div>
-                    <div className="w-full bg-white p-8 rounded-2xl shadow-xl border border-slate-200/80">
-                      <div className="flex items-center gap-4 md:hidden mb-4">
-                          <div className="flex-shrink-0 bg-brand-cyan text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg">
-                            <Icon name={step.icon} className="w-8 h-8" />
-                          </div>
-                          <h2 className="text-2xl font-bold text-brand-dark">{step.title}</h2>
-                      </div>
-                      <h2 className="hidden md:block text-3xl font-bold text-brand-dark">{step.title}</h2>
-                      <p className="mt-2 text-lg text-slate-600 leading-relaxed">{step.description}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* --- כאן השינוי המרכזי --- */}
+          <InteractiveProcessSteps />
+          {/* --- סוף השינוי --- */}
   
-          <div id="events" className="max-w-4xl mx-auto text-center mt-24 pt-12">
+          <div id="events" className="max-w-4xl mx-auto text-center mt-32 pt-12">
             <h2 className="text-4xl font-bold text-brand-dark mb-10">לוח ההפקות הקרוב</h2>
             
             <div className="space-y-8">
@@ -126,9 +87,6 @@ export default async function HowItWorksPage() {
               )}
             </div>
   
-            {/* // ======================================================= // */}
-            {/* // <-- תיקון 1: העיצוב של התיבה "שימו לב" עודכן כאן --> // */}
-            {/* // ======================================================= // */}
             <div className="mt-12 bg-slate-100 border-r-4 border-slate-300 text-slate-800 p-6 rounded-lg text-right shadow-sm">
               <p className="font-bold text-lg">שימו לב:</p>
               <ul className="list-disc list-inside mt-2 space-y-1">
@@ -143,9 +101,6 @@ export default async function HowItWorksPage() {
               <h3 className="text-3xl font-bold text-brand-dark">דמי הצטרפות להפקה</h3>
               <p className="text-5xl font-bold text-brand-dark my-4">400 ₪</p>
 
-              {/* // ============================================================== // */}
-              {/* // <-- תיקון 2: העיצוב של התיבה "חבר מביא חבר" עודכן כאן --> // */}
-              {/* // ============================================================== // */}
               <div className="mt-6 p-6 bg-cyan-50 border-2 border-dashed border-cyan-500 rounded-lg max-w-2xl mx-auto animate-pulse-slow">
                   <Icon name="gift" className="w-10 h-10 mx-auto text-brand-cyan mb-2"/>
                   <p className="font-bold text-xl text-brand-dark">מבצע "חבר מביא חבר"!</p>

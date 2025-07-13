@@ -7,48 +7,56 @@ export const Footer: FC = () => {
     const emailSubject = encodeURIComponent('הגעתי דרך אתר "מעשיך יקרבוך"');
     const whatsappText = encodeURIComponent('שלום, ברצוני לקבוע שיחת ייעוץ');
 
+    const mainLinks = [
+        { href: '/#the-experience', text: 'החוויה שלנו' },
+        { href: '/#community', text: 'הקהילה' },
+        { href: '/#experts', text: 'המומחים שלנו' },
+        { href: '/blog', text: 'מאמרים ובלוג' },
+    ];
+
+    const secondaryLinks = [
+        { href: '/testimonials', text: 'סיפורי הצלחה' },
+        { href: '/faq', text: 'שאלות ותשובות' },
+        { href: '/terms', text: 'תקנון האתר' },
+        { href: '/privacy', text: 'מדיניות פרטיות' },
+    ];
+
     return (
         <footer className="bg-brand-dark text-slate-300" dir="rtl">
             <div className="container mx-auto px-6 lg:px-8 py-20">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-12 max-w-7xl mx-auto">
 
-                    <div className="flex flex-col items-center md:items-start text-center md:text-right">
+                    <div className="flex flex-col items-center md:items-start text-center md:text-right lg:col-span-1">
                         <Link href="/" className="mb-4">
                            <img 
                              src="/images/LOGO.svg" 
                              alt="לוגו מעשיך יקרבוך"
-                             className="h-14							 w-auto"
+                             className="h-14 w-auto"
                            />
                         </Link>
                         <p className="text-lg font-semibold text-white">מחברים בין לבבות, בדרך לחתונה.</p>
                     </div>
 
-                    <div className="text-center">
+                    <div className="text-center md:text-right lg:col-span-2">
                         <h3 className="text-lg font-bold text-white tracking-wider mb-4">ניווט מהיר</h3>
-                        <div className="flex justify-center gap-12">
+                        <div className="flex justify-center md:justify-start gap-12">
                             <ul className="space-y-3 text-slate-400">
-                                <li><a href="/#the-experience" className="hover:text-brand-cyan transition-colors">החוויה שלנו</a></li>
-                                <li><a href="/#community" className="hover:text-brand-cyan transition-colors">הקהילה</a></li>
-                                <li><a href="/blog" className="hover:text-brand-cyan transition-colors">מאמרים ובלוג</a></li>
+                                {mainLinks.map(link => (
+                                    <li key={link.href}><a href={link.href} className="hover:text-brand-cyan transition-colors">{link.text}</a></li>
+                                ))}
                             </ul>
                             <ul className="space-y-3 text-slate-400">
-                                <li><Link href="/faq" className="hover:text-brand-cyan transition-colors">שאלות ותשובות</Link></li>
-                                <li><Link href="/terms" className="hover:text-brand-cyan transition-colors">תקנון</Link></li>
-                                <li><Link href="/privacy" className="hover:text-brand-cyan transition-colors">מדיניות פרטיות</Link></li>
-                            </ul>
-                            <ul className="space-y-3 text-slate-400">
-                                <li><Link href="/testimonials" className="hover:text-brand-cyan transition-colors">סיפורי הצלחה</Link></li>
-                                <li><Link href="/faq" className="hover:text-brand-cyan transition-colors">שאלות ותשובות</Link></li>
-                                <li><Link href="/terms" className="hover:text-brand-cyan transition-colors">תקנון</Link></li>
-                                <li><Link href="/privacy" className="hover:text-brand-cyan transition-colors">מדיניות פרטיות</Link></li>
+                                {secondaryLinks.map(link => (
+                                    <li key={link.href}><Link href={link.href} className="hover:text-brand-cyan transition-colors">{link.text}</Link></li>
+                                ))}
                             </ul>
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-center md:items-end text-center md:text-right">
+                    <div className="flex flex-col items-center md:items-end text-center md:text-right lg:col-span-1">
                         <h3 className="text-lg font-bold text-white tracking-wider mb-4">דברו איתנו</h3>
                         <div className="flex flex-col items-center md:items-end gap-3 text-slate-400">
-                            <a href={`mailto:${emailSubject}`} className="group inline-flex items-center gap-3 hover:text-brand-cyan transition-colors">
+                            <a href={`mailto:SHIDUCHIM.MY@GMAIL.COM?subject=${emailSubject}`} className="group inline-flex items-center gap-3 hover:text-brand-cyan transition-colors">
                                 SHIDUCHIM.MY@GMAIL.COM 
                                 <Icon name="mail" className="w-5 h-5 transition-transform group-hover:scale-110" />
                             </a>
@@ -77,4 +85,3 @@ export const Footer: FC = () => {
         </footer>
     );
 };
-

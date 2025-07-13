@@ -1,25 +1,30 @@
-import type { Config } from 'tailwindcss'
+// tailwind.config.ts
+
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
-      fontFamily: {
-        // מגדיר שכל פעם שנשתמש בקלאס font-sans, הוא יתייחס לפונט Assistant
-        sans: ['var(--font-assistant)'],
-      },
+      // כאן אנחנו מלמדים את Tailwind את הצבעים החדשים שלנו
       colors: {
-        // הגדרת צבעי המותג הרשמיים
-        'brand-dark': '#1e293b', // כחול-דיו
-        'brand-cyan': '#06b6d4', // תכלת-שמיים
-        'brand-cream': '#F9FAFB', // שמנת-ענן
+        'brand-dark': 'var(--brand-dark)',
+        'brand-cyan': 'var(--brand-cyan)',
+        'brand-cyan-light': 'var(--brand-cyan-light)',
+        'brand-cream': 'var(--brand-cream)',
+        'brand-slate': 'var(--brand-slate)',
+        'brand-light-gray': 'var(--brand-light-gray)',
+      },
+      // הוספנו כאן גם את הגופן הראשי של האתר
+      fontFamily: {
+        sans: ['Assistant', 'sans-serif'],
       },
     },
   },
   plugins: [],
-}
-export default config
+};
+export default config;
