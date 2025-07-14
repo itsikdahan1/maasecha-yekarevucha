@@ -91,3 +91,9 @@ export async function getExperts(): Promise<Expert[]> {
   }`;
   return client.fetch(query);
 }
+
+export async function getAllPostsForSitemap() {
+  const query = `*[_type == "post"]{ "slug": slug.current, "updatedAt": _updatedAt }`;
+  const data = await client.fetch(query);
+  return data;
+}
