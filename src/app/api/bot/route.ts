@@ -3,10 +3,12 @@
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  try {
-    const body = await request.json();
+  // הדפסת לוג מיידית כדי לוודא שהפונקציה התחילה לרוץ
+  console.log("API function (App Router) started.");
 
-    // נדפיס את מה שקיבלנו כדי שנוכל לראות את זה בלוגים
+  try {
+    // קריאת גוף הבקשה כ-JSON
+    const body = await request.json();
     console.log("Webhook received:", JSON.stringify(body, null, 2));
 
     const { sender_id, last_response } = body;
@@ -21,6 +23,7 @@ export async function POST(request: Request) {
 
   } catch (error: any) {
     console.error("Error in Bot API:", error);
+    // החזרת שגיאת שרת 500 אם משהו משתבש
     return NextResponse.json({ error: "Failed to process request" }, { status: 500 });
   }
 }
