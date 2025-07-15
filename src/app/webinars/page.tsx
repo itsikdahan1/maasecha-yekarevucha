@@ -1,19 +1,14 @@
-// src/app/webinars/page.tsx
-
 import { getWebinars } from "@/lib/sanity";
-import { Icon } from "@/components/Icon"; // <-- התיקון המרכזי
+import { Icon } from "@/components/ui/Icon"; // תיקון נתיב
 import Link from "next/link";
-import { Webinar } from "@/types"; // ייבוא הטיפוס הנכון
+import { Webinar } from "@/types";
 
-// הגדרת המטא-דאטה הספציפית לעמוד הוובינרים
 export const metadata = {
   title: "וובינרים ועדכונים | מעשיך יקרבוך",
   description: "הצטרפו למפגשים עם נבחרת המומחים שלנו וקבלו כלים מעשיים לדרך לחופה.",
 };
 
-// זהו רכיב שרת, הוא יכול להיות אסינכרוני ולא צריך 'use client'
 export default async function WebinarsPage() {
-    // אחזור הנתונים מתבצע כאן, בצד השרת
     const webinars: Webinar[] = await getWebinars();
 
     const formatWebinarDate = (dateString: string) => {
@@ -33,7 +28,7 @@ export default async function WebinarsPage() {
                 </div>
                 
                 {liveOrNextWebinar ? (
-                    <div className="mt-16 max-w-4xl mx-auto bg-[#FFFBF5] p-8 md:p-12 rounded-2xl border-2 border-[#06b6d4]">
+                    <div className="mt-16 max-w-4xl mx-auto bg-[#FFFBF5] p-8 md:p-12 rounded-2xl border-2 border-brand-cyan">
                         {liveOrNextWebinar.status === 'live' && (
                             <div className="flex items-center gap-2 mb-4">
                                 <span className="relative flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span>
@@ -44,7 +39,7 @@ export default async function WebinarsPage() {
                         <p className="text-slate-600 mt-2 text-lg">עם {liveOrNextWebinar.speaker}</p>
                         <p className="font-semibold text-slate-800 mt-4">{formatWebinarDate(liveOrNextWebinar.date)}</p>
                         <p className="text-slate-700 mt-4 leading-relaxed">{liveOrNextWebinar.description}</p>
-                        <Link href={liveOrNextWebinar.link || '#'} target="_blank" rel="noopener noreferrer" className="inline-block mt-6 px-8 py-4 text-lg font-semibold text-white bg-slate-900 rounded-xl hover:bg-slate-700 transition-colors shadow-lg">
+                        <Link href={liveOrNextWebinar.link || '#'} target="_blank" rel="noopener noreferrer" className="inline-block mt-6 btn-dark text-lg">
                            {liveOrNextWebinar.status === 'live' ? 'הצטרפות לשידור' : 'להרשמה וקבלת תזכורת'}
                         </Link>
                     </div>

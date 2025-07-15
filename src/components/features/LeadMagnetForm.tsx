@@ -1,7 +1,6 @@
-// src/components/LeadMagnetForm.tsx
 'use client';
-import React, { useState, FC } from 'react'; // שיניתי את הייבוא ל-FC
-import { Icon } from './Icon';
+import React, { useState, FC } from 'react';
+import { Icon } from '@/components/ui/Icon';
 
 interface LeadMagnetFormProps {
   title: string;
@@ -31,17 +30,13 @@ export const LeadMagnetForm: FC<LeadMagnetFormProps> = ({ title, description, bu
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, listId }),
       });
-
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.error || 'אופס, משהו השתבש.');
       }
-
       setStatus('success');
       setMessage('נשלח! בדוק/י את תיבת המייל שלך כדי לקבל את המדריך.');
       setEmail('');
-
     } catch (error: any) {
       setStatus('error');
       setMessage(error.message);
@@ -52,7 +47,7 @@ export const LeadMagnetForm: FC<LeadMagnetFormProps> = ({ title, description, bu
     <div className="bg-brand-cream/70 p-8 rounded-2xl shadow-lg border border-slate-200 my-12 text-center" dir="rtl">
       <Icon name="gem" className="w-12 h-12 mx-auto text-brand-cyan mb-4" />
       <h3 className="text-2xl font-bold text-brand-dark">{title}</h3>
-      <p className="text-brand-dark/80 mt-2 mb-6 max-w-lg mx-auto">{description}</p>
+      <p className="text-brand-slate mt-2 mb-6 max-w-lg mx-auto">{description}</p>
       
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
         <input
@@ -63,11 +58,7 @@ export const LeadMagnetForm: FC<LeadMagnetFormProps> = ({ title, description, bu
           required
           className="flex-grow w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan"
         />
-        <button
-          type="submit"
-          disabled={status === 'submitting'}
-          className="bg-brand-dark text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-700 transition-all shadow-md disabled:bg-slate-400"
-        >
+        <button type="submit" disabled={status === 'submitting'} className="btn-dark">
           {status === 'submitting' ? 'שולח...' : buttonText}
         </button>
       </form>

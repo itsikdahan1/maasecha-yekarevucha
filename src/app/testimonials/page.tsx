@@ -1,7 +1,6 @@
-// src/app/testimonials/page.tsx
 import { getTestimonials } from '@/lib/sanity';
 import type { Testimonial } from '@/types';
-import { Icon } from '@/components/Icon';
+import { Icon } from '@/components/ui/Icon';
 
 export const metadata = {
   title: "סיפורי הצלחה והמלצות | מעשיך יקרבוך",
@@ -18,7 +17,7 @@ export default async function TestimonialsPage() {
           <h1 className="text-4xl sm:text-5xl font-bold text-brand-dark tracking-tight">
             הם כבר מצאו. עכשיו תורכם.
           </h1>
-          <p className="mt-6 text-xl text-brand-dark/70 leading-relaxed">
+          <p className="mt-6 text-xl text-brand-slate leading-relaxed">
             ההצלחה הגדולה ביותר שלנו היא לראות את הזוגות שבונים בתים נאמנים בישראל. הנה מה שיש להם, ולמומחים שמלווים אותנו, לספר.
           </p>
         </div>

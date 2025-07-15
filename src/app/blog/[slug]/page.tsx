@@ -1,11 +1,10 @@
-// src/app/blog/[slug]/page.tsx
 import React from 'react';
-import { Icon } from '@/components/Icon';
 import { getPost } from '@/lib/sanity';
 import type { Post } from '@/types';
 import Link from 'next/link';
 import { PortableText, PortableTextComponents } from '@portabletext/react';
-import { LeadMagnetForm } from '@/components/LeadMagnetForm';
+import { Icon } from '@/components/ui/Icon'; // תיקון נתיב
+import { LeadMagnetForm } from '@/components/features/LeadMagnetForm'; // תיקון נתיב
 
 interface BlogPostPageProps {
   params: {
@@ -32,7 +31,7 @@ const portableTextComponents: PortableTextComponents = {
     },
   },
   types: {
-    image: ({ value }) => (
+    image: ({ value }: any) => (
         <img 
             src={value.asset.url} 
             alt={value.alt || 'תמונה מתוך המאמר'} 
@@ -78,8 +77,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     <LeadMagnetForm 
                         title="רוצה עוד כלים כאלה?"
                         description="הורד/י עכשיו בחינם את המדריך המלא 'איך להפוך תסכול בדייטים להזדמנות' וקבל/י אסטרטגיות מעשיות לשינוי אמיתי."
-                        buttonText="שלח לי את המדריך"
-                        listId="159568255472633180" // יש להחליף ב-ID האמיתי של הרשימה שלך ממערכת הדיוור
+                        buttonText="לקבלת המדריך למייל"
+                        listId="YOUR_LIST_ID"
                     />
                 </div>
             </div>

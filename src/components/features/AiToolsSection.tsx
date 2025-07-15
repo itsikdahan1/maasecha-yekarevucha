@@ -1,7 +1,6 @@
-// src/components/AiToolsSection.tsx
 'use client';
 import React, { useState, FC } from 'react';
-import { Icon } from './Icon';
+import { Icon } from '@/components/ui/Icon';
 
 const renderFormattedText = (text: string) => {
     let html = text
@@ -9,10 +8,9 @@ const renderFormattedText = (text: string) => {
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/(\d)\. (.*)/g, '<p class="flex items-start"><span class="mr-2 text-brand-cyan font-bold">$1.</span>$2</p>')
         .replace(/\n/g, '<br />');
-    return <div className="text-brand-dark/80 space-y-3 leading-relaxed" dangerouslySetInnerHTML={{ __html: html }} />;
+    return <div className="text-brand-slate space-y-3 leading-relaxed" dangerouslySetInnerHTML={{ __html: html }} />;
 };
 
-// שאלות השאלון המודרך
 const profileQuestions = [
     { id: 'q1', text: 'איך נראה ערב שישי אידיאלי עבורך?' },
     { id: 'q2', text: 'מהי התכונה החשובה ביותר שאת/ה מחפש/ת בבן/בת זוג?' },
@@ -21,20 +19,14 @@ const profileQuestions = [
 
 export const AiToolsSection: FC = () => {
     const [activeTab, setActiveTab] = useState('profile');
-    
-    // State for Profile Analyzer
     const [profileAnswers, setProfileAnswers] = useState<{ [key: string]: string }>({});
     const [profileSuggestion, setProfileSuggestion] = useState('');
     const [isProfileLoading, setIsProfileLoading] = useState(false);
-
-    // State for Date Ideas
     const [dateRegion, setDateRegion] = useState('ירושלים');
     const [dateBudget, setDateBudget] = useState('נמוך');
     const [dateAtmosphere, setDateAtmosphere] = useState('רגועה');
     const [dateIdeas, setDateIdeas] = useState('');
     const [isDateLoading, setIsDateLoading] = useState(false);
-
-    // State for Conversation Starters
     const [starterInterests, setStarterInterests] = useState('');
     const [conversationStarters, setConversationStarters] = useState('');
     const [isStarterLoading, setIsStarterLoading] = useState(false);
@@ -42,7 +34,6 @@ export const AiToolsSection: FC = () => {
     const callApi = async (prompt: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>, setResult: React.Dispatch<React.SetStateAction<string>>) => {
         setLoading(true);
         setResult('היועץ החכם חושב לרגע...');
-
         try {
             const response = await fetch('/api/generate', {
                 method: 'POST',
@@ -72,18 +63,8 @@ export const AiToolsSection: FC = () => {
             setProfileSuggestion('כדי לקבל ניתוח מדויק, אנא ענה/י על כל השאלות.');
             return;
         }
-
         const answersText = profileQuestions.map(q => `שאלה: ${q.text}\nתשובה: ${profileAnswers[q.id]}`).join('\n\n');
-        
-        // פרומפט ייעודי לניתוח אישיות
-        const prompt = `
-        אתה "היועץ החכם" של "מעשיך יקרבוך". תפקידך לנתח את התשובות הבאות של משתמש/ת וליצור סיכום אישיות חם, מזמין ומחמיא עבור פרופיל ההיכרויות שלו/ה. 
-        התמקד בתכונות החיוביות שעולות מהתשובות. התשובה צריכה להיות פסקה אחת קצרה (2-3 משפטים).
-        התשובות הן:
-        ${answersText}
-
-        סיכום היועץ החכם:
-        `;
+        const prompt = `אתה "היועץ החכם" של "מעשיך יקרבוך". תפקידך לנתח את התשובות הבאות של משתמש/ת וליצור סיכום אישיות חם, מזמין ומחמיא עבור פרופיל ההיכרויות שלו/ה. התמקד בתכונות החיוביות שעולות מהתשובות. התשובה צריכה להיות פסקה אחת קצרה (2-3 משפטים). התשובות הן:\n${answersText}\n\nסיכום היועץ החכם:`;
         callApi(prompt, setIsProfileLoading, setProfileSuggestion);
     };
 
@@ -109,14 +90,12 @@ export const AiToolsSection: FC = () => {
             <div className="container mx-auto px-6 lg:px-8">
                 <div className="text-center mb-16">
                     <h2 className="text-lg font-semibold text-brand-cyan tracking-wider uppercase">כלי עזר חכמים להצלחה</h2>
-                    <p className="mt-2 text-4xl sm:text-5xl font-bold text-brand-dark tracking-tight">
-                        היועץ החכם שלכם להצלחה
-                    </p>
+                    <p className="mt-2 text-4xl sm:text-5xl font-bold text-brand-dark tracking-tight">היועץ החכם שלכם להצלחה</p>
                 </div>
                 <div className="max-w-3xl mx-auto">
                     <div className="mb-8 flex justify-center border-b border-slate-200">
                         {tabs.map(tab => (
-                            <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`whitespace-nowrap py-4 px-6 font-medium text-lg transition-colors duration-300 ${activeTab === tab.id ? 'border-b-2 border-brand-cyan text-brand-cyan' : 'text-brand-dark/60 hover:text-brand-dark'}`}>
+                            <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`whitespace-nowrap py-4 px-6 font-medium text-lg transition-colors duration-300 ${activeTab === tab.id ? 'border-b-2 border-brand-cyan text-brand-cyan' : 'text-brand-slate hover:text-brand-dark'}`}>
                                 {tab.label}
                             </button>
                         ))}
@@ -125,20 +104,16 @@ export const AiToolsSection: FC = () => {
                         {activeTab === 'profile' && (
                             <div>
                                 <h3 className="text-2xl font-bold text-brand-dark mb-4">✨ יועץ הפרופיל החכם</h3>
-                                <p className="text-brand-dark/70 mb-6">ענו על מספר שאלות קצרות, והיועץ החכם שלנו יפיק עבורכם סיכום אישיותי שיאיר את התכונות הטובות ביותר שלכם.</p>
+                                <p className="text-brand-slate mb-6">ענו על מספר שאלות קצרות, והיועץ החכם שלנו יפיק עבורכם סיכום אישיותי שיאיר את התכונות הטובות ביותר שלכם.</p>
                                 <div className="space-y-6">
                                     {profileQuestions.map(q => (
                                         <div key={q.id}>
                                             <label className="block text-md font-semibold text-brand-dark/90 mb-2">{q.text}</label>
-                                            <textarea 
-                                                onChange={(e) => handleAnswerChange(q.id, e.target.value)} 
-                                                placeholder="התשובה שלך..." 
-                                                className="w-full h-24 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan transition bg-white" 
-                                            />
+                                            <textarea onChange={(e) => handleAnswerChange(q.id, e.target.value)} placeholder="התשובה שלך..." className="w-full h-24 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan transition bg-white" />
                                         </div>
                                     ))}
                                 </div>
-                                <button onClick={handleGenerateProfileAnalysis} disabled={isProfileLoading} className="mt-6 w-full bg-brand-dark text-white px-6 py-3.5 rounded-lg text-lg font-semibold hover:bg-slate-700 transition-all shadow-md flex items-center justify-center gap-2 disabled:bg-slate-400">
+                                <button onClick={handleGenerateProfileAnalysis} disabled={isProfileLoading} className="mt-6 btn-dark w-full flex items-center justify-center gap-2">
                                     {isProfileLoading ? 'מנתח את תשובותיך...' : '✨ הפק סיכום יועץ חכם'}
                                 </button>
                                 {profileSuggestion && (
@@ -154,25 +129,19 @@ export const AiToolsSection: FC = () => {
                                 <h3 className="text-2xl font-bold text-brand-dark mb-6">✨ מחולל רעיונות לפגישה</h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                                     <div>
-                                        <label className="block text-sm font-medium text-brand-dark/80 mb-1">אזור</label>
-                                        <select value={dateRegion} onChange={(e) => setDateRegion(e.target.value)} className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan bg-white">
-                                            <option>ירושלים</option> <option>תל אביב והמרכז</option> <option>הצפון</option> <option>הדרום</option>
-                                        </select>
+                                        <label className="block text-sm font-medium text-brand-slate mb-1">אזור</label>
+                                        <select value={dateRegion} onChange={(e) => setDateRegion(e.target.value)} className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan bg-white"><option>ירושלים</option> <option>תל אביב והמרכז</option> <option>הצפון</option> <option>הדרום</option></select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-brand-dark/80 mb-1">תקציב</label>
-                                        <select value={dateBudget} onChange={(e) => setDateBudget(e.target.value)} className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan bg-white">
-                                            <option>נמוך</option> <option>בינוני</option> <option>גבוה</option>
-                                        </select>
+                                        <label className="block text-sm font-medium text-brand-slate mb-1">תקציב</label>
+                                        <select value={dateBudget} onChange={(e) => setDateBudget(e.target.value)} className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan bg-white"><option>נמוך</option> <option>בינוני</option> <option>גבוה</option></select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-brand-dark/80 mb-1">אווירה</label>
-                                        <select value={dateAtmosphere} onChange={(e) => setDateAtmosphere(e.target.value)} className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan bg-white">
-                                            <option>רגועה</option> <option>אקטיבית</option> <option>תרבותית</option>
-                                        </select>
+                                        <label className="block text-sm font-medium text-brand-slate mb-1">אווירה</label>
+                                        <select value={dateAtmosphere} onChange={(e) => setDateAtmosphere(e.target.value)} className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan bg-white"><option>רגועה</option> <option>אקטיבית</option> <option>תרבותית</option></select>
                                     </div>
                                 </div>
-                                <button onClick={handleGenerateDateIdeas} disabled={isDateLoading} className="w-full bg-brand-dark text-white px-6 py-3.5 rounded-lg text-lg font-semibold hover:bg-slate-700 transition-all shadow-md flex items-center justify-center gap-2 disabled:bg-slate-400">
+                                <button onClick={handleGenerateDateIdeas} disabled={isDateLoading} className="btn-dark w-full flex items-center justify-center gap-2">
                                     {isDateLoading ? 'חושב על רעיון...' : '✨ קבל הצעות לפגישה'}
                                 </button>
                                 {dateIdeas && <div className="mt-6 p-4 bg-white rounded-lg border border-slate-200">{renderFormattedText(dateIdeas)}</div>}
@@ -181,9 +150,9 @@ export const AiToolsSection: FC = () => {
                         {activeTab === 'starters' && (
                             <div>
                                 <h3 className="text-2xl font-bold text-brand-dark mb-4">✨ מחולל פתיחים לשיחה</h3>
-                                <p className="text-brand-dark/70 mb-6">מהם תחומי העניין של הצד השני? הזינו אותם וקבלו רעיונות למשפטי פתיחה</p>
+                                <p className="text-brand-slate mb-6">מהם תחומי העניין של הצד השני? הזינו אותם וקבלו רעיונות למשפטי פתיחה</p>
                                 <input type="text" value={starterInterests} onChange={(e) => setStarterInterests(e.target.value)} placeholder="לדוגמה: טיולים, מוזיקה חסידית, בישול" className="w-full p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan bg-white"/>
-                                <button onClick={handleGenerateStarters} disabled={isStarterLoading} className="mt-4 w-full bg-brand-dark text-white px-6 py-3.5 rounded-lg text-lg font-semibold hover:bg-slate-700 transition-all shadow-md flex items-center justify-center gap-2 disabled:bg-slate-400">
+                                <button onClick={handleGenerateStarters} disabled={isStarterLoading} className="mt-4 btn-dark w-full flex items-center justify-center gap-2">
                                     {isStarterLoading ? 'מנסח משפטים...' : '✨ קבל רעיונות לפתיחה'}
                                 </button>
                                 {conversationStarters && <div className="mt-6 p-4 bg-white rounded-lg border border-slate-200">{renderFormattedText(conversationStarters)}</div>}

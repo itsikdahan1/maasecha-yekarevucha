@@ -1,12 +1,9 @@
-// src/app/register/page.tsx
-
-import { RegistrationWizard } from '@/components/RegistrationWizard';
+import { RegistrationWizard } from '@/components/features/RegistrationWizard';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'הצטרפות למסע | מעשיך יקרבוך',
     description: 'התחילו את המסע שלכם לזוגיות. צרו פרופיל ראשוני וגלו איך היועץ החכם שלנו יכול לעזור לכם.',
-    // מניעת אינדוקס של עמוד ההרשמה, כדי שהפוקוס יהיה על עמודי התוכן
     robots: {
         index: false,
         follow: true,
@@ -21,7 +18,7 @@ export default function RegisterPage() {
                     <h1 className="text-4xl sm:text-5xl font-bold text-brand-dark tracking-tight">
                         צעד ראשון בדרך לבית
                     </h1>
-                    <p className="mt-6 text-xl text-brand-dark/70 leading-relaxed">
+                    <p className="mt-6 text-xl text-brand-slate leading-relaxed">
                         בוא/י נתחיל יחד את המסע. התהליך הקצר הבא יעזור לנו להכיר אותך טוב יותר, וייתן לך כלים ראשונים להצלחה.
                     </p>
                 </div>

@@ -1,9 +1,9 @@
 // src/app/how-it-works/page.tsx
-import { Icon } from "@/components/Icon";
+import { Icon } from "@/components/ui/Icon"; // תיקון נתיב
 import Link from 'next/link';
 import { getUpcomingEvents } from '@/lib/sanity';
 import type { Event } from '@/types';
-import { InteractiveProcessSteps } from "@/components/InteractiveProcessSteps"; // ייבוא הרכיב החדש
+import { InteractiveProcessSteps } from "@/components/features/InteractiveProcessSteps"; // תיקון נתיב
 
 export const metadata = {
   title: "איך זה עובד? | מעשיך יקרבוך",
@@ -49,9 +49,7 @@ export default async function HowItWorksPage() {
             </p>
           </div>
   
-          {/* --- כאן השינוי המרכזי --- */}
           <InteractiveProcessSteps />
-          {/* --- סוף השינוי --- */}
   
           <div id="events" className="max-w-4xl mx-auto text-center mt-32 pt-12">
             <h2 className="text-4xl font-bold text-brand-dark mb-10">לוח ההפקות הקרוב</h2>

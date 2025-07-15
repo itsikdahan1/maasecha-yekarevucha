@@ -1,9 +1,9 @@
 // src/app/not-found.tsx
 import Link from 'next/link';
-// הנתיב נכון, אין צורך בשינוי אם Icon.tsx נמצא ישירות תחת /components
-import { Icon } from '@/components/Icon'; 
+import { Icon } from '@/components/ui/Icon'; // תיקון
 
 export default function NotFound() {
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6" dir="rtl">
       <div className="max-w-md">
