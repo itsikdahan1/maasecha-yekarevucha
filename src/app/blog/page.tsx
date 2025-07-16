@@ -29,12 +29,12 @@ export default async function BlogPage() {
             posts.map((post) => (
               <Link
                 key={post._id}
-                href={`/blog/${post.slug?.current}`}
+                href={`/blog/${post.slug}`} // <-- התיקון הקריטי כאן
                 className="group flex flex-col text-right bg-brand-cream/70 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-slate-100"
               >
                 <div className="p-8 flex-grow">
                   <p className="text-sm font-medium text-brand-cyan group-hover:text-brand-cyan-light">{post.categoryName || 'כללי'}</p>
-                  <h3 className="mt-2 text-2xl font-bold text-brand-dark group-hover:text-brand-cyan">{post.title}</h3>
+                  <h3 className="mt-2 text-2xl font-bold text-brand-dark group-hover:text-brand-cyan h-16">{post.title}</h3>
                   <p className="mt-4 text-base text-brand-slate line-clamp-3 flex-grow">{post.excerpt}</p>
                 </div>
                 <div className="px-8 py-4 bg-white/70 flex justify-between items-center mt-auto">

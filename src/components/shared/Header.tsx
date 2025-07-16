@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 export const Header: FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
   const navLinks = [
     { name: "החוויה", href: "/#the-experience" },
     { name: "קהילה", href: "/#community" },
@@ -13,6 +14,7 @@ export const Header: FC = () => {
     { name: "בלוג", href: "/blog" },
     { name: "ממליצים", href: "/testimonials" },
     { name: "שאלות ותשובות", href: "/faq" },
+    { name: "היועץ החכם", href: "/#ai-tools" },
   ];
 
   const menuVariants = {
@@ -30,29 +32,43 @@ export const Header: FC = () => {
   };
 
   return (
-    <header className="bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm" dir="rtl">
-      <div className="container mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-24">
-          <Link href="/" className="z-[101]" aria-label="חזרה לדף הבית">
-            <img src="/images/LOGO.svg" alt="לוגו מעשיך יקרבוך" className="h-14 w-auto" />
-          </Link>
-          <nav className="hidden lg:flex items-center gap-x-10">
-            {navLinks.map((link) => (
-              <Link key={link.name} href={link.href} className="text-brand-slate hover:text-brand-cyan text-lg font-semibold transition-colors">
-                {link.name}
+    // שינוי מבני: עטיפה ב-Fragment כדי להפריד את ה-Header מהתפריט הנפתח
+    <>
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl shadow-sm" dir="rtl">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-24">
+            {/* לוגו בצד ימין */}
+            <div className="lg:flex-1">
+              <Link href="/" aria-label="חזרה לדף הבית">
+                <img src="/images/LOGO.svg" alt="לוגו מעשיך יקרבוך" className="h-14 w-auto" />
               </Link>
-            ))}
-          </nav>
-          <div className="hidden lg:block">
-            <Link href="/how-it-works" className="btn-dark">איך מתחילים?</Link>
-          </div>
-          <div className="lg:hidden z-[101]">
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2" aria-label={isMenuOpen ? "סגור תפריט" : "פתח תפריט"}>
-              <Icon name={isMenuOpen ? "x" : "menu"} className="w-8 h-8 text-brand-dark" />
-            </button>
+            </div>
+            
+            {/* ניווט אמצעי (דסקטופ) */}
+            <nav className="hidden lg:flex items-center justify-center gap-x-8">
+              {navLinks.map((link) => (
+                <Link key={link.name} href={link.href} className="text-brand-slate hover:text-brand-cyan text-base font-semibold transition-colors">
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
+
+            {/* כפתור בצד שמאל (דסקטופ) */}
+            <div className="hidden lg:flex flex-1 justify-end">
+              <Link href="/how-it-works" className="btn-dark">איך מתחילים?</Link>
+            </div>
+
+            {/* כפתור תפריט מובייל */}
+            <div className="lg:hidden">
+              <button onClick={() => setIsMenuOpen(true)} className="p-2" aria-label="פתח תפריט">
+                <Icon name="menu" className="w-8 h-8 text-brand-dark" />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </header>
+
+      {/* תפריט מובייל במסך מלא (מחוץ ל-header) */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -60,9 +76,15 @@ export const Header: FC = () => {
             initial="closed"
             animate="open"
             exit="closed"
-            className="fixed inset-0 bg-brand-cream z-[100] flex flex-col items-center justify-center lg:hidden"
+            className="fixed inset-0 bg-brand-cream z-50 flex flex-col items-center justify-center p-6 lg:hidden"
           >
-            <nav className="flex flex-col items-center gap-y-8">
+            <div className="absolute top-6 right-6">
+                <button onClick={() => setIsMenuOpen(false)} className="p-2" aria-label="סגור תפריט">
+                    <Icon name="x" className="w-8 h-8 text-brand-dark" />
+                </button>
+            </div>
+            
+            <nav className="flex flex-col items-center text-center gap-y-8">
               {navLinks.map((link, i) => (
                 <motion.div key={link.name} custom={i} variants={linkVariants}>
                   <Link href={link.href} onClick={() => setIsMenuOpen(false)} className="text-3xl font-bold text-brand-dark hover:text-brand-cyan transition-colors">
@@ -79,6 +101,6 @@ export const Header: FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 };

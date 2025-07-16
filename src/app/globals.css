@@ -13,7 +13,7 @@
     --brand-cyan: #06b6d4;
     --brand-cyan-light: #0891b2;
     --brand-cream: #fdfaf6;
-    --brand-slate: #334155;
+    --brand-slate: #334155; /* <-- עדכון: גוון כהה יותר לשיפור ניגודיות */
     --brand-light-gray: #f1f5f9;
   }
 }
@@ -24,12 +24,9 @@
 @layer base {
   html {
     @apply scroll-smooth;
-    /* overflow-x: hidden; <-- הוסר */
   }
-  /* כאן אנחנו משתמשים בצבעים החדשים ש-Tailwind מכיר */
   body {
     @apply bg-brand-cream font-sans text-brand-slate antialiased;
-    /* overflow-x: hidden; <-- הוסר */
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold text-brand-dark;

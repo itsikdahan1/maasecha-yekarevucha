@@ -1,39 +1,32 @@
 // src/app/sitemap.ts
-
 import { MetadataRoute } from 'next';
-import { getAllPostsForSitemap } from '@/lib/sanity'; // נייבא את הפונקציה החדשה
+import { getAllPostsForSitemap } from '@/lib/sanity';
 
-// הגדרת כתובת הבסיס של האתר
-const BASE_URL = 'https://www.maasecha.com';
+const BASE_URL = 'https://www.yourdomain.com'; // שנה לכתובת האתר שלך
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // 1. הוספת העמודים הסטטיים
-  const staticRoutes = [
-    '/',
-    '/how-it-works',
-    '/faq',
-    '/contact',
-    '/register',
-    '/blog',
-    '/testimonials',
-    '/privacy',
-    '/terms',
-  ].map((route) => ({
-    url: `${BASE_URL}${route}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: 'monthly' as 'monthly',
-    priority: route === '/' ? 1.0 : 0.8,
-  }));
+    const posts = await getAllPostsForSitemap();
 
-  // 2. הוספת העמודים הדינמיים מהבלוג
-  const posts = await getAllPostsForSitemap();
-  const dynamicRoutes = posts.map((post: any) => ({
-    url: `${BASE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.updatedAt).toISOString(),
-    changeFrequency: 'weekly' as 'weekly', // מאמרים עשויים להתעדכן לעיתים קרובות יותר
-    priority: 0.7,
-  }));
+    const postRoutes = posts.map(post => ({
+        url: `${BASE_URL}/blog/${post.slug.current}`,
+        lastModified: new Date(post._updatedAt as string).toISOString(), // הוספת as string ל- _updatedAt
+        changeFrequency: 'weekly' as 'weekly', // וודא שזה literal type
+        priority: 0.7,
+    }));
 
-  // 3. איחוד כל הכתובות
-  return [...staticRoutes, ...dynamicRoutes];
+    return [
+        {
+            url: BASE_URL,
+            lastModified: new Date().toISOString(),
+            changeFrequency: 'daily',
+            priority: 1,
+        },
+        {
+            url: `${BASE_URL}/about`,
+            lastModified: new Date().toISOString(),
+            changeFrequency: 'monthly',
+            priority: 0.8,
+        },
+        ...postRoutes,
+    ];
 }

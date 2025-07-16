@@ -23,7 +23,8 @@ const processSteps = [
 
 export const InteractiveProcessSteps = () => {
   return (
-    <div className="relative mt-20 max-w-3xl mx-auto">
+    // הוספנו overflow-hidden לאלמנט העוטף כדי למנוע גלישה צידית
+    <div className="relative mt-20 max-w-3xl mx-auto overflow-hidden px-2"> 
       {/* הקו האנכי שמחבר בין השלבים */}
       <div className="absolute left-1/2 top-0 h-full w-0.5 bg-slate-200" aria-hidden="true"></div>
       

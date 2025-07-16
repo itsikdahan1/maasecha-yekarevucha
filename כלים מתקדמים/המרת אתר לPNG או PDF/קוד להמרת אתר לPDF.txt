@@ -1,0 +1,87 @@
+import asyncio
+from playwright.async_api import async_playwright
+import os
+
+# --- 1. רשימת הדפים להמרה ---
+# !!! הוסף או שנה את הכתובות ברשימה לפי הדפים באתר שלך !!!
+PAGES_TO_CONVERT = {
+    "home": "https://www.Maasecha.com/",
+    "how-it-works": "https://www.Maasecha.com/how-it-works",
+    "blog": "https://www.Maasecha.com/blog",
+    "testimonials": "https://www.Maasecha.com/testimonials",
+    "faq": "https://www.Maasecha.com/faq"
+    # הוסף עוד דפים כאן במבנה: "שם-קובץ": "כתובת-מלאה"
+}
+
+# --- 2. הגדרות עיצוב ל-PDF ---
+TIMEOUT_DURATION = 60000  # 60 שניות
+# סלקטורים למניעת חיתוך בלוקים
+BLOCK_SELECTOR = "section, figure, article, .card" 
+
+
+async def convert_page_to_pdf(page_name, url):
+    """
+    פונקציה שמקבלת שם וכתובת של דף, וממירה אותו ל-PDF
+    """
+    output_filename = f"Maasecha-{page_name}.pdf"
+    
+    css_to_inject = f"""
+        @media print {{
+            {BLOCK_SELECTOR} {{
+                page-break-inside: avoid !important;
+            }}
+        }}
+    """
+    
+    print(f"\n--- מתחיל המרה עבור: {page_name} ---")
+    try:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch()
+            page = await browser.new_page()
+            page.set_default_timeout(TIMEOUT_DURATION)
+            
+            print(f"טוען את האתר: {url}")
+            await page.goto(url, wait_until="load")
+            
+            print("מוסיף חוקי CSS למניעת חיתוך...")
+            await page.add_style_tag(content=css_to_inject)
+            await page.wait_for_timeout(2000)
+
+            print(f"יוצר את הקובץ: {output_filename}...")
+            await page.pdf(
+                path=output_filename, 
+                format="A4", 
+                print_background=True,
+                landscape=True
+            )
+            
+            await browser.close()
+            output_full_path = os.path.join(os.getcwd(), output_filename)
+            print(f"✅ הצלחה! הקובץ נוצר בנתיב: {output_full_path}")
+            return True
+
+    except Exception as e:
+        print(f"❌ אירעה שגיאה בעת המרת הדף '{page_name}':")
+        print(e)
+        return False
+
+async def main():
+    print(f"נמצאו {len(PAGES_TO_CONVERT)} דפים להמרה.")
+    success_count = 0
+    fail_count = 0
+    
+    # לולאה שעוברת על כל הדפים שהגדרת למעלה
+    for name, url_address in PAGES_TO_CONVERT.items():
+        if await convert_page_to_pdf(name, url_address):
+            success_count += 1
+        else:
+            fail_count += 1
+            
+    print("\n--- סיכום ---")
+    print(f"✅ הושלמו בהצלחה: {success_count} קבצים.")
+    print(f"❌ נכשלו: {fail_count} קבצים.")
+
+
+# הרצת הקוד הראשי
+if __name__ == "__main__":
+    asyncio.run(main())
