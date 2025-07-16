@@ -1,7 +1,7 @@
 'use client';
 import React, { FC } from 'react';
 import Link from 'next/link';
-import { Icon } from '@/components/ui/Icon'; // תיקון
+import { Icon } from '@/components/ui/Icon';
 import { productionEvening } from '@/lib/data';
 
 const mentalCoachingItem = {
@@ -53,14 +53,13 @@ export const ProductionEveningSection: FC = () => {
                   <Icon name={item.icon} className="w-9 h-9"/>
                 </div>
               </div>
-              <h4 className="font-bold text-brand-dark text-xl">{item.name}</h4>
+              <h3 className="font-bold text-brand-dark text-xl">{item.name}</h3>
               <p className="text-brand-slate mt-2 text-md leading-relaxed">{item.description}</p>
             </div>
           ))}
         </div>
 
         <div className="max-w-7xl mx-auto mt-24">
-            {/* --- כאן התיקון: עטפנו את הכל ב-flex container --- */}
             <div className="relative flex flex-col lg:flex-row items-center justify-center gap-x-8 gap-y-12">
               
                 <div className="w-full lg:w-[40%] bg-white p-8 sm:p-10 rounded-2xl shadow-2xl border border-slate-200/80 z-10 order-2 lg:order-1">
@@ -77,7 +76,7 @@ export const ProductionEveningSection: FC = () => {
 
                 <div className="w-36 h-36 lg:w-48 lg:h-48 bg-gradient-to-br from-brand-cyan to-cyan-600 rounded-full flex flex-col shrink-0 items-center justify-center text-center p-4 shadow-2xl z-20 text-white border-8 border-brand-cream animate-pulse-slow order-1 lg:order-2">
                     <Icon name="gift" className="w-10 h-10 mb-2"/>
-                    <h4 className="text-2xl font-bold">בונוס</h4>
+                    <h3 className="text-2xl font-bold">בונוס</h3>
                     <p className="text-sm">מתנה לכל משתתף</p>
                 </div>
 

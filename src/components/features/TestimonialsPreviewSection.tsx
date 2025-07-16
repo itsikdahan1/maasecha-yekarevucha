@@ -31,7 +31,7 @@ export const TestimonialsPreviewSection: FC<TestimonialsPreviewProps> = ({ testi
               </blockquote>
               <figcaption className="mt-6 flex items-center gap-x-4 pt-6 border-t border-slate-200">
                 {testimonial.imageUrl ? (
-                  <img className="h-12 w-12 rounded-full bg-slate-50 object-cover" src={testimonial.imageUrl} alt={testimonial.authorName} />
+                  <img className="h-12 w-12 rounded-full bg-slate-50 object-cover" src={testimonial.imageUrl} alt={testimonial.authorName} loading="lazy" />
                 ) : (
                   <span className="h-12 w-12 rounded-full bg-slate-200 flex items-center justify-center">
                     <Icon name="user" className="w-6 h-6 text-slate-500" />

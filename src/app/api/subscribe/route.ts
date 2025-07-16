@@ -2,11 +2,11 @@
 
 import { NextResponse } from 'next/server';
 
-// משתנה הסביבה עבור המפתח של MailerLite
 const MAILERLITE_API_KEY = process.env.MAILERLITE_API_KEY;
+// הגדרנו מזהה קבוע עבור קבוצת הניוזלטר שלך. שנה אותו אם יצרת קבוצה אחרת.
+const NEWSLETTER_GROUP_ID = process.env.MAILERLITE_NEWSLETTER_GROUP_ID || 'YOUR_NEWSLETTER_GROUP_ID_HERE'; 
 
 export async function POST(request: Request) {
-  // בדיקה ראשונית אם המפתח הוגדר בכלל
   if (!MAILERLITE_API_KEY) {
     console.error('MailerLite API key is not configured.');
     return NextResponse.json({ error: 'שגיאה בתצורת המערכת.' }, { status: 500 });
@@ -15,17 +15,24 @@ export async function POST(request: Request) {
   try {
     const { email, listId } = await request.json();
 
-    if (!email || !listId) {
-      return NextResponse.json({ error: 'כתובת מייל ומזהה רשימה נדרשים.' }, { status: 400 });
+    if (!email) {
+      return NextResponse.json({ error: 'כתובת מייל נדרשת.' }, { status: 400 });
     }
 
-    // כתובת ה-API החדשה של MailerLite
+    // קביעת קבוצת היעד ב-MailerLite
+    // אם הגיע listId ספציפי (כמו מה-LeadMagnet), נשתמש בו. אחרת, נשתמש בקבוצת הניוזלטר.
+    const targetGroupId = listId === 'newsletter' ? NEWSLETTER_GROUP_ID : listId;
+
+    if (!targetGroupId || targetGroupId === 'YOUR_NEWSLETTER_GROUP_ID_HERE') {
+        console.error('MailerLite Group ID is not configured.');
+        return NextResponse.json({ error: 'שגיאה בתצורת מערכת הדיוור.' }, { status: 500 });
+    }
+
     const mailerliteUrl = 'https://connect.mailerlite.com/api/subscribers';
 
-    // מבנה הנתונים ש-MailerLite מצפה לקבל
     const subscriberData = {
       email,
-      groups: [listId], // listId הוא למעשה ה-Group ID ב-MailerLite
+      groups: [targetGroupId],
       status: 'active',
     };
 
@@ -33,7 +40,6 @@ export async function POST(request: Request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // שיטת האימות של MailerLite היא באמצעות Bearer Token
         'Authorization': `Bearer ${MAILERLITE_API_KEY}`,
       },
       body: JSON.stringify(subscriberData),
@@ -41,14 +47,12 @@ export async function POST(request: Request) {
 
     const data = await response.json();
 
-    // בדיקה אם הבקשה הצליחה (סטטוס 200 או 201)
-    if (!response.ok) {
-      // טיפול בשגיאות נפוצות של MailerLite
+    if (!response.ok && data?.error?.message !== "The subscriber with this email already exists.") {
       console.error('MailerLite API error:', data);
-      const errorMessage = data?.error?.message || 'שגיאה בהרשמה לרשימת התפוצה.';
-      throw new Error(errorMessage);
+      throw new Error(data?.error?.message || 'שגיאה בהרשמה לרשימת התפוצה.');
     }
-
+    
+    // אם המשתמש כבר קיים, אנחנו רואים בזה הצלחה.
     return NextResponse.json({ message: 'ההרשמה בוצעה בהצלחה!' });
 
   } catch (error: any) {

@@ -35,10 +35,10 @@ export const FloatingButtons: FC = () => {
     };
 
     const buttons = [
-        { label: "למעלה", icon: "arrowUp", action: scrollToTop, bgColor: "bg-brand-dark" },
-        { label: "נגישות", icon: "accessibilityNew", action: () => setIsAccessibilityOpen(true), bgColor: "bg-slate-700" },
-        { label: "יועץ AI", icon: "aiLetters", action: () => setIsChatOpen(true), bgColor: "bg-brand-cyan" },
-        { label: "וואטסאפ", icon: "whatsappSolid", action: () => window.open(`https://wa.me/972553080685?text=${whatsappText}`, '_blank'), bgColor: "bg-green-500" },
+        { label: "גלול למעלה", icon: "arrowUp", action: scrollToTop, bgColor: "bg-brand-dark" },
+        { label: "פתח תפריט נגישות", icon: "accessibilityNew", action: () => setIsAccessibilityOpen(true), bgColor: "bg-slate-700" },
+        { label: "פתח צ'אט עם יועץ AI", icon: "aiLetters", action: () => setIsChatOpen(true), bgColor: "bg-brand-cyan" },
+        { label: "צור קשר בוואטסאפ", icon: "whatsappSolid", action: () => window.open(`https://wa.me/972553080685?text=${whatsappText}`, '_blank'), bgColor: "bg-green-500" },
     ];
 
     return (
@@ -60,8 +60,8 @@ export const FloatingButtons: FC = () => {
                             animate="open"
                             exit="closed"
                             custom={i}
-                            aria-label={button.label}
-                            title={button.label}
+                            aria-label={button.label} // <-- עדכון: הוספת aria-label
+                            title={button.label} // title מספק tooltip למשתמשי עכבר
                         >
                             <Icon name={button.icon} className="w-7 h-7" />
                         </motion.button>
@@ -73,7 +73,7 @@ export const FloatingButtons: FC = () => {
                     className="flex items-center justify-center h-16 w-16 rounded-full text-white font-semibold shadow-xl bg-brand-dark hover:bg-slate-700 transition-colors"
                     animate={isOpen ? "open" : "closed"}
                     variants={mainButtonVariants}
-                    aria-label={isOpen ? "סגור תפריט עזר" : "פתח תפריט עזר"}
+                    aria-label={isOpen ? "סגור תפריט עזר" : "פתח תפריט עזר"} // <-- עדכון: הוספת aria-label
                 >
                     <Icon name={isOpen ? "x" : "sparkles"} className="w-8 h-8"/>
                 </motion.button>

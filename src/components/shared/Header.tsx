@@ -47,7 +47,7 @@ export const Header: FC = () => {
             <Link href="/how-it-works" className="btn-dark">איך מתחילים?</Link>
           </div>
           <div className="lg:hidden z-[101]">
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2">
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2" aria-label={isMenuOpen ? "סגור תפריט" : "פתח תפריט"}>
               <Icon name={isMenuOpen ? "x" : "menu"} className="w-8 h-8 text-brand-dark" />
             </button>
           </div>

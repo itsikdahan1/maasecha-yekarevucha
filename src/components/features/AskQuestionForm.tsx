@@ -38,7 +38,7 @@ export function AskQuestionForm() {
 
   return (
     <div className="text-center">
-      <h2 className="text-2xl font-bold tracking-tight text-brand-dark">יש לך שאלה נוספת?</h2>
+      <h3 className="text-2xl font-bold tracking-tight text-brand-dark">יש לך שאלה נוספת?</h3>
       <p className="mt-2 text-lg leading-8 text-brand-slate">
         נשמח לענות. שלח/י לנו את שאלתך ואולי נוסיף אותה למאגר.
       </p>

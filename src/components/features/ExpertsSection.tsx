@@ -25,7 +25,8 @@ export const ExpertsSection: FC<ExpertsSectionProps> = ({ experts }) => {
               <img 
                 className="w-32 h-32 rounded-full mx-auto ring-4 ring-brand-cyan/50 p-1 shadow-lg object-cover" 
                 src={expert.imageUrl || 'https://placehold.co/128x128/06b6d4/white?text=מומחה'} 
-                alt={`תמונה של ${expert.name}`} 
+                alt={`תמונה של ${expert.name}`}
+                loading="lazy"
               />
               <h3 className="mt-6 text-xl font-semibold text-brand-dark">{expert.name}</h3>
               <p className="mt-1 text-brand-cyan font-medium">{expert.role}</p>
