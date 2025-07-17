@@ -1,7 +1,9 @@
+// FILENAME: src/app/webinars/page.tsx
+
 import { getWebinars } from "@/lib/sanity";
-import { Icon } from "@/components/ui/Icon"; // תיקון נתיב
+import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
-import { Webinar } from "@/types";
+import type { Webinar } from "@/types";
 
 export const metadata = {
   title: "וובינרים ועדכונים | מעשיך יקרבוך",

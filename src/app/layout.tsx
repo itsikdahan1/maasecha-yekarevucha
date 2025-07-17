@@ -1,3 +1,5 @@
+// FILENAME: src/app/layout.tsx
+
 import type { Metadata } from "next";
 import { Assistant } from "next/font/google";
 import "./globals.css";
@@ -8,7 +10,7 @@ import { Footer } from "@/components/shared/Footer";
 import { FloatingButtons } from "@/components/shared/FloatingButtons";
 import PageTransition from "@/components/shared/PageTransition";
 import Gtm from "@/components/utility/Gtm";
-import { NewsletterPopup } from "@/components/features/NewsletterPopup"; // <-- 1. ייבוא הרכיב החדש
+import { NewsletterPopup } from "@/components/features/NewsletterPopup";
 
 const assistant = Assistant({
   subsets: ["hebrew"],
@@ -36,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </PageTransition>
         <Footer />
         <FloatingButtons />
-        <NewsletterPopup /> {/* <-- 2. הוספת הרכיב כאן */}
+        <NewsletterPopup />
       </body>
     </html>
   );
