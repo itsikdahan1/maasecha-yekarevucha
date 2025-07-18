@@ -1,11 +1,11 @@
-// src/app/how-it-works/page.tsx
-import { Icon } from "@/components/ui/Icon"; // תיקון נתיב
-import Link from 'next/link';
-import { getUpcomingEvents } from '@/lib/sanity';
-import type { Event } from '@/types';
-import { InteractiveProcessSteps } from "@/components/features/InteractiveProcessSteps"; // תיקון נתיב
+import { getUpcomingEvents } from "@/lib/sanity";
+import { Icon } from "@/components/ui/Icon";
+import Link from "next/link";
+import type { Event } from "@/types";
+import { InteractiveProcessSteps } from "@/components/features/InteractiveProcessSteps";
+import { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "איך זה עובד? | מעשיך יקרבוך",
   description: "הצצה אל מאחורי הקלעים של התהליך הייחודי שלנו - מהרישום החכם, דרך ערב ההפקה ועד לקהילה התומכת.",
 };
@@ -38,13 +38,13 @@ export default async function HowItWorksPage() {
     };
   
     return (
-      <div className="bg-slate-50" dir="rtl">
+      <div className="bg-slate-50/70" dir="rtl">
         <main className="container mx-auto px-6 lg:px-8 py-24 sm:py-32">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-dark tracking-tight">
               המסע שלך לחתונה מתחיל כאן
             </h1>
-            <p className="mt-6 text-xl text-brand-dark/70 leading-relaxed">
+            <p className="mt-6 text-xl text-brand-dark/80 leading-relaxed">
               בנינו תהליך ייחודי המשלב טכנולוגיה, מפגש אנושי וליווי קהילתי. כך זה עובד, שלב אחר שלב:
             </p>
           </div>
@@ -95,7 +95,7 @@ export default async function HowItWorksPage() {
             </div>
           </div>
           
-          <div className="text-center mt-20 p-10 bg-brand-cream/60 rounded-2xl shadow-inner">
+          <div className="text-center mt-20 p-10 bg-brand-cream rounded-2xl shadow-inner border border-slate-200">
               <h3 className="text-3xl font-bold text-brand-dark">דמי הצטרפות להפקה</h3>
               <p className="text-5xl font-bold text-brand-dark my-4">400 ₪</p>
 

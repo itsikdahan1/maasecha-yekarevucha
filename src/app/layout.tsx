@@ -1,16 +1,9 @@
-// FILENAME: src/app/layout.tsx
+// src/app/layout.tsx
+// אין כאן 'use client'; זהו Server Component!
 
-import type { Metadata } from "next";
 import { Assistant } from "next/font/google";
 import "./globals.css";
-import { Suspense } from 'react';
-
-import { Header } from "@/components/shared/Header";
-import { Footer } from "@/components/shared/Footer";
-import { FloatingButtons } from "@/components/shared/FloatingButtons";
-import PageTransition from "@/components/shared/PageTransition";
-import Gtm from "@/components/utility/Gtm";
-import { NewsletterPopup } from "@/components/features/NewsletterPopup";
+import { RootLayoutClient } from "./RootLayoutClient";
 
 const assistant = Assistant({
   subsets: ["hebrew"],
@@ -18,27 +11,28 @@ const assistant = Assistant({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: "מעשיך יקרבוך | מיזם שידוכים חדשני",
-  description: "הגיע הזמן להכיר באמת. פלטפורמה חכמה עם פרופילי וידאו אותנטיים וקהילה תומכת, להיכרות אמיתית, עמוקה ומכבדת.",
-  icons: { icon: '/favicon.ico' },
-};
-
+// RootLayout הופך להיות Server Component.
+// הוא אחראי להגדרות ה-HTML הבסיסיות, head, וטעינת נתונים אם צריך.
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="he" dir="rtl">
-      <body className={`${assistant.className} bg-brand-cream`}>
-        <Suspense fallback={null}>
-          {process.env.NEXT_PUBLIC_GTM_ID && <Gtm />}
-        </Suspense>
+    <html lang="he" dir="rtl" className={assistant.className}>
+      <head>
+        {/* ======================= התיקון כאן ======================= */}
+        {/*
+          מחזירים את הגדרות ה-viewport לסטנדרט המומלץ.
+          זה יאפשר זום וימנע את ה"באג" של הגדלה בלחיצה כפולה.
+        */}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {/* ===================== סוף התיקון ======================= */}
         
-        <Header />
-        <PageTransition>
-          <main>{children}</main>
-        </PageTransition>
-        <Footer />
-        <FloatingButtons />
-        <NewsletterPopup />
+        {/* אם אתה רוצה להוסיף metadata אחרת (title, description), זה המקום */}
+        {/* <title>מעשיך יקרבוך</title> */}
+        {/* <meta name="description" content="תיאור האתר שלך" /> */}
+      </head>
+      <body>
+        <RootLayoutClient>
+            {children}
+        </RootLayoutClient>
       </body>
     </html>
   );

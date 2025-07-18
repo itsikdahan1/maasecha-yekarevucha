@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef, FC } from 'react';
 import { motion } from 'framer-motion';
-import { Icon } from '@/components/ui/Icon'; // תיקון נתיב
+import { Icon } from '@/components/ui/Icon';
 
 export const AIChat: FC<{ toggle: () => void }> = ({ toggle }) => {
     const [messages, setMessages] = useState<any[]>([
@@ -101,8 +101,8 @@ export const AIChat: FC<{ toggle: () => void }> = ({ toggle }) => {
                 </header>
                 <div ref={chatBoxRef} className="flex-1 p-4 space-y-4 overflow-y-auto">
                     {messages.map(msg => (
-                        <div key={msg.id} className={`flex ${msg.sender === 'ai' ? 'justify-start' : 'justify-end'}`}>
-                            <div className={`max-w-xs lg:max-w-sm px-4 py-2 rounded-2xl ${msg.sender === 'ai' ? 'bg-slate-200 text-slate-800' : 'bg-brand-dark text-white'}`}>
+                        <div key={msg.id} className={`flex ${msg.sender === 'ai' ? 'justify-start' : 'justify-end'}`}> {/* justify-start ב-RTL הוא ימין, justify-end הוא שמאל */}
+                            <div className={`max-w-xs lg:max-w-sm px-4 py-2 rounded-2xl text-right ${msg.sender === 'ai' ? 'bg-slate-200 text-slate-800' : 'bg-brand-dark text-white'}`}> {/* הוספת text-right לכל הודעה */}
                                 {msg.isThinking ? 
                                     <div className="animate-pulse p-1">...</div> 
                                     : <span dangerouslySetInnerHTML={renderFormattedMessage(msg.text)} />
@@ -111,7 +111,7 @@ export const AIChat: FC<{ toggle: () => void }> = ({ toggle }) => {
                         </div>
                     ))}
                     {isAwaitingContext && (
-                        <div className="flex flex-wrap justify-center gap-2 pt-2">
+                        <div className="flex flex-wrap justify-end gap-2 pt-2"> {/* שינוי justify-center ל-justify-end */}
                             {contextOptions.map(context => (
                                 <button key={context} onClick={() => handleContextSelect(context)} className="px-4 py-2 bg-brand-cyan text-white font-semibold rounded-full hover:bg-cyan-600 transition-colors text-sm">
                                     {context}
@@ -128,7 +128,7 @@ export const AIChat: FC<{ toggle: () => void }> = ({ toggle }) => {
                             onChange={e => setInputValue(e.target.value)} 
                             onKeyPress={e => e.key === 'Enter' && handleSend()} 
                             placeholder="כתוב את שאלתך..."
-                            className="flex-1 p-2 border border-slate-300 rounded-full focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan"
+                            className="flex-1 p-2 border border-slate-300 rounded-full focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan text-right" /* <-- הוספת text-right */
                         />
                         <button 
                             onClick={handleSend} 

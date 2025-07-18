@@ -1,5 +1,7 @@
 // src/lib/data.ts
-import type { Expert } from '@/types';
+
+// שינוי: הסרנו את מערך ה-experts הסטטי מכיוון שהנתונים נטענים מ-Sanity.
+// זה מונע בלבול ומשאיר מקור אמת אחד לנתונים.
 
 export const productionEvening = {
   info: {
@@ -34,10 +36,3 @@ export const productionEvening = {
     }
   }
 };
-
-export const experts: Expert[] = [
-    // הוספנו _id לכל מומחה
-    { _id: "1", name: "רב ויועץ זוגי", role: "הכנה רוחנית ומעשית", imageUrl: "https://placehold.co/128x128/e0f2f7/083344?text=R" },
-    { _id: "2", name: "מומחה לתקשורת", role: "כלים פרקטיים לשיחה", imageUrl: "https://placehold.co/128x128/e0f2f7/083344?text=M" },
-    { _id: "3", name: "סטייליסטית", role: "שידור המסר הנכון", imageUrl: "https://placehold.co/128x128/e0f2f7/083344?text=S" },
-];

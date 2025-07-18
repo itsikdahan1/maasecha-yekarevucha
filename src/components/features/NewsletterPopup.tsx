@@ -1,3 +1,4 @@
+// NewsletterPopup.tsx
 'use client';
 
 import React, { useState, useEffect, useRef, FC } from 'react';
@@ -100,15 +101,16 @@ export const NewsletterPopup: FC = () => {
                         dir="rtl"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <button onClick={closePopup} className="absolute top-4 left-4 p-2 hover:bg-slate-100 rounded-full" aria-label="סגור פופ-אפ">
+                        {/* כפתור סגירה */}
+                        <button onClick={closePopup} className="absolute top-4 right-4 p-2 hover:bg-slate-100 rounded-full" aria-label="סגור פופ-אפ"> {/* <-- שינוי left-4 ל-right-4 */}
                             <Icon name="x" className="w-6 h-6 text-slate-500" />
                         </button>
                         
                         <Icon name="gift" className="w-16 h-16 text-brand-cyan" />
 
-                        <h3 className="mt-4 text-3xl font-bold text-brand-dark">רגע לפני שממשיכים...</h3>
-                        <p className="mt-2 text-4xl font-bold text-brand-cyan">10% הנחה במתנה!</p>
-                        <p className="mt-4 text-lg text-brand-slate max-w-md">
+                        <h3 className="mt-4 text-3xl font-bold text-brand-dark text-right w-full">רגע לפני שממשיכים...</h3> {/* <-- הוספת text-right ו-w-full */}
+                        <p className="mt-2 text-2xl sm:text-4xl font-bold text-brand-cyan text-right w-full">10% הנחה במתנה!</p> {/* <-- שינוי text-4xl ל-text-2xl sm:text-4xl, הוספת text-right ו-w-full */}
+                        <p className="mt-4 text-lg text-brand-slate max-w-md text-right w-full"> {/* <-- הוספת text-right ו-w-full */}
                             הצטרפו לניוזלטר שלנו וקבלו קופון הנחה חד-פעמי לערב ההפקה הקרוב, יחד עם עדכונים, טיפים וכלים שיעזרו לכם בדרך לחופה.
                         </p>
 
@@ -120,19 +122,19 @@ export const NewsletterPopup: FC = () => {
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="כתובת המייל שלך"
                                     required
-                                    className="flex-grow w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan"
+                                    className="flex-grow w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan text-right" // <-- הוספת text-right
                                 />
                                 <button type="submit" disabled={status === 'submitting'} className="btn-dark whitespace-nowrap">
                                     {status === 'submitting' ? 'שולח...' : 'קבלת קופון'}
                                 </button>
                             </div>
                             {message && (
-                                <p className={`mt-3 text-sm font-semibold ${status === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                                <p className={`mt-3 text-sm font-semibold ${status === 'success' ? 'text-green-600' : 'text-red-600'} text-right`}> {/* <-- הוספת text-right */}
                                     {message}
                                 </p>
                             )}
                         </form>
-                        <p className="mt-4 text-xs text-slate-400">אנו מכבדים את פרטיותך. ניתן להסיר את עצמך בכל עת.</p>
+                        <p className="mt-4 text-xs text-slate-400 text-right w-full">אנו מכבדים את פרטיותך. ניתן להסיר את עצמך בכל עת.</p> {/* <-- הוספת text-right ו-w-full */}
                     </motion.div>
                 </motion.div>
             )}

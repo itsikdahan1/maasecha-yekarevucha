@@ -1,22 +1,76 @@
+// src/components/features/ContactSection.tsx
+'use client'; 
 import React, { FC } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import Link from 'next/link';
+import { motion } from 'framer-motion'; 
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring',
+      stiffness: 70,
+      damping: 10,
+      when: "beforeChildren",
+      staggerChildren: 0.15, 
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
+const iconVariants = {
+  hidden: { opacity: 0, scale: 0.5 },
+  visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 150, damping: 10 } },
+};
+
 
 export const ContactSection: FC = () => {
   return (
-    <section id="contact" className="bg-brand-dark" dir="rtl">
-      <div className="container mx-auto px-6 py-24 text-center">
-        <h2 className="text-4xl sm:text-5xl font-bold text-white">מוכנים להתחיל את המסע שלכם?</h2>
-        <p className="max-w-2xl mx-auto mt-4 text-lg text-slate-300">הדרך לזוגיות מתחילה בצעד אחד. גלו את התהליך הייחודי שלנו, שמחבר בין טכנולוגיה, קהילה וליווי אישי.</p>
-        <div className="mt-10">
-          <Link href="/how-it-works" className="btn-primary text-xl">
-            <span className="flex items-center gap-3">
-              <Icon name="sparkles" className="w-6 h-6" />
-              גלו את התהליך
-            </span>
+    <motion.section
+      id="contact"
+      className="bg-brand-dark relative overflow-hidden py-24 sm:py-32" 
+      dir="rtl"
+      initial="hidden"
+      whileInView="visible" 
+      // ======================= התיקון כאן =======================
+      // שינינו את amount ל-0.1 כדי שהאנימציה תתחיל כמעט מיד
+      viewport={{ once: true, amount: 0.1 }} 
+      // ===================== סוף התיקון =======================
+      variants={sectionVariants}
+    >
+      <div className="container mx-auto px-6 py-0 text-center relative z-10">
+        <motion.div variants={iconVariants} className="mb-8 flex justify-center">
+            <Icon name="gem" className="w-20 h-20 text-brand-cyan drop-shadow-lg" />
+        </motion.div>
+
+        <motion.h2
+          className="text-4xl sm:text-5xl font-bold text-white tracking-tight"
+          variants={itemVariants}
+        >
+          הצעד הראשון שלך לחופה מתחיל כאן
+        </motion.h2>
+        <motion.p
+          className="max-w-2xl mx-auto mt-4 text-lg text-slate-300 leading-relaxed"
+          variants={itemVariants}
+        >
+          הדרך לזוגיות מתחילה בצעד אחד. גלו את התהליך הייחודי שלנו, שמחבר בין טכנולוגיה, קהילה וליווי אישי.
+        </motion.p>
+        <motion.div
+          className="mt-12"
+          variants={itemVariants}
+        >
+          <Link href="/how-it-works" className="btn-primary text-xl px-12 py-5 shadow-2xl hover:shadow-cyan-500/40 transform hover:-translate-y-1">
+            כן, אני רוצה להתחיל!
           </Link>
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };

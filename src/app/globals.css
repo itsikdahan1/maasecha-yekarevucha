@@ -8,25 +8,36 @@
 /* ---------------------------------- */
 @layer base {
   :root {
-    /* פלטת הצבעים המרכזית של המותג */
     --brand-dark: #1a202c;
     --brand-cyan: #06b6d4;
     --brand-cyan-light: #0891b2;
     --brand-cream: #fdfaf6;
-    --brand-slate: #334155; /* <-- עדכון: גוון כהה יותר לשיפור ניגודיות */
+    --brand-slate: #334155;
     --brand-light-gray: #f1f5f9;
   }
 }
 
 /* ---------------------------------- */
-/* 2. סגנונות בסיס של האתר         */
+/* 2. סגנונות בסיס של האתר             */
 /* ---------------------------------- */
 @layer base {
   html {
     @apply scroll-smooth;
+    /* 💡 שינוי: הגדרת גובה 100% ל-html ו-body למיקום נכון של פוטר */
+    height: 100%;
   }
   body {
     @apply bg-brand-cream font-sans text-brand-slate antialiased;
+    padding-bottom: 150px; /* לפנות מקום לכפתורים הצפים */
+    padding-top: 80px; /* לפנות מקום להאדר המקובע */
+    /* 💡 שינוי: הפיכת body ל-flex container כדי למקם את main והפוטר */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* וודא שהגוף תמיד תופס לפחות 100% מגובה המסך */
+  }
+  /* 💡 שינוי: main flex-grow כדי שידחוף את הפוטר לתחתית */
+  main {
+    flex-grow: 1; /* יתפוס את כל השטח הפנוי וידחוף את הפוטר למטה */
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold text-brand-dark;
@@ -45,16 +56,20 @@
   }
 }
 
-
 /* ---------------------------------------------------- */
-/* 4. כללי CSS עבור תפריט הנגישות (ללא שינוי)     */
+/* 4. כללי CSS עבור תפריט הנגישות */
 /* ---------------------------------------------------- */
 :root.high-contrast {
-  --background-color: #000000;
-  --text-color: #ffffff;
-  --link-color: #FFFF00;
+  /* רקע וטקסט - השתמש בצבעי המותג הכהים והבהירים ביותר */
+  --background-color: var(--brand-dark); /* רקע כהה מהמותג */
+  --text-color: var(--brand-cream);    /* טקסט בהיר מהמותג */
+  /* 💡 שינוי קריטי: צבע קישור - ציאן המותג, בעל ניגודיות טובה מול רקע כהה */
+  --link-color: var(--brand-cyan); /* צבע קישורים מהמותג - ירוק-כחול */
+
+
   background-color: var(--background-color) !important;
   color: var(--text-color) !important;
+  border-color: var(--link-color) !important;
 }
 :root.high-contrast body,
 :root.high-contrast div,
@@ -86,16 +101,19 @@
 :root.high-contrast a {
   color: var(--link-color) !important;
   text-decoration: underline !important;
+  text-decoration-thickness: 2px !important; /* ודא קו תחתון בולט */
 }
 :root.high-contrast svg {
     fill: var(--text-color) !important;
     stroke: var(--text-color) !important;
 }
 :root.high-contrast img {
-    filter: grayscale(100%) contrast(200%) !important;
+    /* 💡 שינוי: פילטר פחות אגרסיבי, או הסרה מוחלטת */
+    /* שקול להשתמש רק ב-grayscale, או להסיר את הפילטר לגמרי אם התמונות חשובות לתוכן */
+    filter: grayscale(100%) !important; /* פחות אגרסיבי מ-contrast(200%) */
 }
-:root.readable-font body, 
-:root.readable-font button, 
+:root.readable-font body,
+:root.readable-font button,
 :root.readable-font input,
 :root.readable-font a,
 :root.readable-font p,
@@ -110,7 +128,7 @@
 }
 
 /* ---------------------------------- */
-/* 5. Utilities נוספים (ללא שינוי) */
+/* 5. Utilities נוספים */
 /* ---------------------------------- */
 @layer utilities {
   .animate-pulse-slow {
@@ -125,5 +143,36 @@
       opacity: .9;
       transform: scale(1.03);
     }
+  }
+
+  .overflow-x-hidden-container {
+    overflow-x: hidden;
+  }
+
+  /* אנימציית ריחוף אולטרה-איטית וחלקה - עבור בלובים ברקע */
+  .animate-float-ultra-slow {
+    animation: floatUltraSlow 20s ease-in-out infinite alternate;
+  }
+  @keyframes floatUltraSlow {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(15px, 10px) rotate(3deg); }
+    50% { transform: translate(0, 20px) rotate(0deg); }
+    75% { transform: translate(-15px, 10px) rotate(-3deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+
+  /* קלאסים לשליטה על השהיית אנימציה */
+  .animation-delay-2000 { animation-delay: 2s; }
+  .animation-delay-3000 { animation-delay: 3s; }
+  .animation-delay-4000 { animation-delay: 4s; }
+
+  /* טשטוש קטן מאוד */
+  .blur-xs {
+    filter: blur(2px);
+  }
+
+  /* צל פנימי קטן עבור אייקונים */
+  .shadow-inner-sm {
+    box-shadow: inset 0 1px 2px 0 rgb(0 0 0 / 0.05);
   }
 }

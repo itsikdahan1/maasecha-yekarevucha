@@ -14,7 +14,7 @@ const Step = ({ currentStep, stepNumber, title, children }: { currentStep: numbe
     );
 };
 
-export const RegistrationWizard = () => {
+export const RegistrationWizard = () => { // תיקון: הסרת "=> {" מהשורה הזו
     const [step, setStep] = useState(1);
     const [userData, setUserData] = useState({ email: '', password: '', about: '' });
     const [aiSuggestion, setAiSuggestion] = useState('');
@@ -67,12 +67,12 @@ export const RegistrationWizard = () => {
                 <p className="text-center text-brand-slate mb-6">נתחיל עם הפרטים הבסיסיים. הפרטים שלך בטוחים איתנו.</p>
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-semibold text-gray-900">כתובת מייל</label>
-                        <input type="email" name="email" value={userData.email} onChange={handleInputChange} className="w-full mt-1 p-3 border border-slate-300 rounded-lg" />
+                        <label className="block text-sm font-semibold text-gray-900 text-right">כתובת מייל</label>
+                        <input type="email" name="email" value={userData.email} onChange={handleInputChange} className="w-full mt-1 p-3 border border-slate-300 rounded-lg text-right" />
                     </div>
                     <div>
-                        <label className="block text-sm font-semibold text-gray-900">סיסמה</label>
-                        <input type="password" name="password" value={userData.password} onChange={handleInputChange} className="w-full mt-1 p-3 border border-slate-300 rounded-lg" />
+                        <label className="block text-sm font-semibold text-gray-900 text-right">סיסמה</label>
+                        <input type="password" name="password" value={userData.password} onChange={handleInputChange} className="w-full mt-1 p-3 border border-slate-300 rounded-lg text-right" />
                     </div>
                 </div>
                 <button onClick={nextStep} className="w-full mt-8 btn-dark">המשך לשלב הבא</button>
@@ -80,8 +80,8 @@ export const RegistrationWizard = () => {
 
             <Step currentStep={step} stepNumber={2} title="ספר/י לנו עליך">
                 <p className="text-center text-brand-slate mb-6">בלי לחץ, פשוט כתוב/י בכמה מילים מה חשוב לך, מה את/ה אוהב/ת, ומה את/ה מחפש/ת.</p>
-                <textarea name="about" value={userData.about} onChange={handleInputChange} rows={6} className="w-full p-3 border border-slate-300 rounded-lg" placeholder="לדוגמה: אוהב/ת ללמוד, לטייל בארץ, חשוב לי בית עם שמחה ופתיחות..."></textarea>
-                <div className="flex justify-between mt-8">
+                <textarea name="about" value={userData.about} onChange={handleInputChange} rows={6} className="w-full p-3 border border-slate-300 rounded-lg text-right" placeholder="לדוגמה: אוהב/ת ללמוד, לטייל בארץ, חשוב לי בית עם שמחה ופתיחות..."></textarea>
+                <div className="flex justify-end mt-8 gap-x-4">
                     <button onClick={prevStep} className="text-slate-600 font-semibold">חזרה</button>
                     <button onClick={nextStep} className="btn-dark">המשך לשלב הבא</button>
                 </div>
@@ -94,12 +94,12 @@ export const RegistrationWizard = () => {
                     {isLoading ? 'חושב...' : 'הפק לי הצעה לפרופיל'}
                 </button>
                 {aiSuggestion && (
-                    <div className="mt-6 p-4 bg-brand-cream/60 rounded-lg border border-slate-200">
+                    <div className="mt-6 p-4 bg-brand-cream/60 rounded-lg border border-slate-200 text-right">
                         <h4 className="font-bold text-brand-dark">ההצעה שלנו:</h4>
                         <p dangerouslySetInnerHTML={renderFormattedText(aiSuggestion)} className="mt-2 text-brand-slate"></p>
                     </div>
                 )}
-                <div className="flex justify-between mt-8">
+                <div className="flex justify-end mt-8 gap-x-4">
                     <button onClick={prevStep} className="text-slate-600 font-semibold">חזרה</button>
                     <button onClick={nextStep} className="btn-dark">המשך לשלב הסופי</button>
                 </div>
@@ -108,11 +108,11 @@ export const RegistrationWizard = () => {
             <Step currentStep={step} stepNumber={4} title="הפרופיל שלך כמעט מוכן!">
                 <div className="text-center">
                     <Icon name="check" className="w-16 h-16 mx-auto bg-green-100 text-green-600 rounded-full p-3 mb-4"/>
-                    <p className="text-lg text-brand-slate leading-relaxed">
+                    <p className="text-lg text-brand-slate leading-relaxed text-right">
                         יצרת בהצלחה פרופיל ראשוני. הצעד האחרון והמשמעותי ביותר להפעלת הפרופיל, קבלת הצעות וגישה מלאה לקהילה, הוא השתתפות בערב ההפקה שלנו.
                     </p>
-                    <p className="mt-4 font-semibold text-brand-dark">זוהי הדרך שלנו להבטיח קהילה איכותית, רצינית ומחויבת.</p>
-                    <Link href="/how-it-works#events" className="inline-block mt-8 btn-primary text-lg">
+                    <p className="mt-4 font-semibold text-brand-dark text-right">זוהי הדרך שלנו להבטיח קהילה איכותית, רצינית ומחויבת.</p>
+                    <Link href="/how-it-works#events" className="inline-block mt-8 btn-primary text-base">
                         לפרטים והרשמה לערב ההפקה הקרוב
                     </Link>
                 </div>

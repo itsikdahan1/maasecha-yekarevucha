@@ -44,19 +44,20 @@ export const LeadMagnetForm: FC<LeadMagnetFormProps> = ({ title, description, bu
   };
 
   return (
-    <div className="bg-brand-cream/70 p-8 rounded-2xl shadow-lg border border-slate-200 my-12 text-center" dir="rtl">
-      <Icon name="gem" className="w-12 h-12 mx-auto text-brand-cyan mb-4" />
+    // תיקון: הסרת שורות ריקות או הערות ששיבשו את התחביר
+    <div className="bg-brand-cream/70 p-8 rounded-2xl shadow-lg border border-slate-200 my-12 text-right" dir="rtl">
+      <Icon name="gem" className="w-12 h-12 text-brand-cyan mb-4 mx-auto rtl:mr-auto rtl:ml-0" />
       <h3 className="text-2xl font-bold text-brand-dark">{title}</h3>
       <p className="text-brand-slate mt-2 mb-6 max-w-lg mx-auto">{description}</p>
       
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto justify-center">
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="כתובת המייל שלך"
           required
-          className="flex-grow w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan"
+          className="flex-grow w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan text-right placeholder:text-right"
         />
         <button type="submit" disabled={status === 'submitting'} className="btn-dark">
           {status === 'submitting' ? 'שולח...' : buttonText}

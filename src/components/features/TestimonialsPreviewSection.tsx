@@ -26,7 +26,7 @@ export const TestimonialsPreviewSection: FC<TestimonialsPreviewProps> = ({ testi
         <div className="max-w-6xl mx-auto grid gap-8 md:grid-cols-1 lg:grid-cols-3">
           {testimonialsToShow.map((testimonial) => (
             <figure key={testimonial._id} className="flex flex-col justify-between p-8 bg-brand-light rounded-2xl shadow-lg border border-slate-100 transition-all duration-300 hover:shadow-cyan-500/10 hover:-translate-y-1">
-              <blockquote className="text-lg text-brand-slate before:content-['“'] before:mr-1 before:text-3xl before:text-brand-cyan after:content-['”'] after:ml-1 after:text-3xl after:text-brand-cyan">
+              <blockquote className="text-lg sm:text-xl text-brand-slate before:content-['“'] before:mr-1 before:text-3xl before:text-brand-cyan after:content-['”'] after:ml-1 after:text-3xl after:text-brand-cyan"> {/* <-- שינוי גודל פונט */}
                 <p className="inline">{testimonial.quote}</p>
               </blockquote>
               <figcaption className="mt-6 flex items-center gap-x-4 pt-6 border-t border-slate-200">
@@ -37,7 +37,8 @@ export const TestimonialsPreviewSection: FC<TestimonialsPreviewProps> = ({ testi
                     <Icon name="user" className="w-6 h-6 text-slate-500" />
                   </span>
                 )}
-                <div>
+                {/* ודא שהטקסט מיושר לימין בתוך ה-div */}
+                <div className="text-right"> {/* <-- הוספת text-right */}
                   <div className="font-semibold text-brand-dark">{testimonial.authorName}</div>
                   <div className="text-slate-500">{testimonial.authorRole}</div>
                 </div>
