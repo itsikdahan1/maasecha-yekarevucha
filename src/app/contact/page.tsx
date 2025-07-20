@@ -1,5 +1,6 @@
-import { ContactForm } from '@/components/features/ContactForm'; // תיקון נתיב
-import { Icon } from '@/components/ui/Icon'; // תיקון נתיב
+// src/app/contact/page.tsx
+import { ContactForm } from '@/components/features/ContactForm';
+import { Icon } from '@/components/ui/Icon';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

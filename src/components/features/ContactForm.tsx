@@ -1,9 +1,13 @@
-// src/components/ContactForm.tsx
+
+// src/components/features/ContactForm.tsx
 'use client'
 
 import React, { useState } from 'react';
 
+// ======================= התיקון כאן =======================
+// הוספנו את המילה 'export' לפני הפונקציה, כדי שקבצים אחרים יוכלו לייבא אותה.
 export function ContactForm() {
+// ===================== סוף התיקון =======================
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
 
@@ -38,7 +42,6 @@ export function ContactForm() {
     }
   };
 
-  // הגדרת סגנון אחיד לשדות הקלט, בהתאם לשפת העיצוב
   const inputStyles = "block w-full rounded-md border-0 px-3.5 py-2 text-brand-dark shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-brand-primary sm:text-sm sm:leading-6 transition-colors duration-200";
 
   return (
@@ -66,7 +69,6 @@ export function ContactForm() {
                 </div>
             </div>
             <div className="mt-10">
-                {/* שימוש בסגנון הכפתור הגלובלי שהגדרנו */}
                 <button type="submit" disabled={status === 'submitting'} className="btn-dark w-full block text-center">
                     {status === 'submitting' ? 'שולח...' : 'שליחה'}
                 </button>

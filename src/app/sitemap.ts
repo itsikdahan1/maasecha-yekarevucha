@@ -1,30 +1,22 @@
 // FILENAME: src/app/sitemap.ts
 
 import { MetadataRoute } from 'next';
-import { getPosts } from '@/lib/sanity'; // שיניתי לפונקציה שכבר קיימת ומחזירה את כל הפוסטים
-import type { Post } from '@/types';
+import { getAllPostsForSitemap } from '@/lib/sanity';
 
-// ======================= עדכון קריטי =======================
-// !!! שנה את הכתובת הזו לכתובת האמיתית של האתר שלך לפני העלאה לפרודקשן !!!
-const BASE_URL = 'https://www.maasecha.com'; // לדוגמה, או כל דומיין אחר
-// ==========================================================
+const BASE_URL = 'https://www.maasecha.com'; // ודא שזו הכתובת הנכונה
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // 1. קבלת כל המאמרים מהבלוג
-  const posts = await getPosts();
+  const posts = await getAllPostsForSitemap();
 
   const postRoutes = posts
-    .filter((post): post is Pick<Post, 'slug' | '_updatedAt'> & { _updatedAt: string } => 
-        Boolean(post && post.slug && post.slug.current && post._updatedAt)
-    )
+    .filter(post => post && post.slug && post.slug.current && post._updatedAt)
     .map(post => ({
       url: `${BASE_URL}/blog/${post.slug.current}`,
-      lastModified: new Date(post._updatedAt).toISOString(),
+      lastModified: new Date(post._updatedAt).toISOString(), // עכשיו זה בטוח כי הטיפוס מחייב את השדה
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     }));
 
-  // 2. הגדרת כל העמודים הסטטיים באתר
   const staticRoutes = [
     { url: BASE_URL, priority: 1.0, changeFrequency: 'daily' as const },
     { url: `${BASE_URL}/how-it-works`, priority: 0.9, changeFrequency: 'monthly' as const },
@@ -42,7 +34,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date().toISOString(),
   }));
 
-  // 3. איחוד כל הנתיבים
   return [
     ...staticRoutes,
     ...postRoutes,

@@ -66,15 +66,26 @@ export default defineType({
     prepare(selection) {
       const {title, date, speaker, status} = selection;
       const formattedDate = date ? new Date(date).toLocaleDateString('he-IL') : 'אין תאריך';
-      const statusText = {
+      
+      // הגדרת טיפוס מפורש למפתח סטטוס
+      type WebinarStatusKey = 'live' | 'upcoming' | 'ended';
+      
+      // ביצוע type assertion על מנת לוודא ש-status הוא WebinarStatusKey
+      const statusKey = status as WebinarStatusKey;
+      
+      // הגדרת מפה של סטטוסי טקסט עם טיפוס מפורש
+      const statusTextMap: Record<WebinarStatusKey, string> = {
           'live': '🔴 בשידור חי',
           'upcoming': '🔜 בקרוב',
           'ended': '✅ הסתיים',
-      }[status] || status;
+      };
+      
+      const statusText = statusTextMap[statusKey] || statusKey; // שימוש במפה המתוקנת
+
       return {
         title: title,
         subtitle: `${formattedDate} | מרצה: ${speaker} | סטטוס: ${statusText}`,
-      }
+      };
     },
   },
 })

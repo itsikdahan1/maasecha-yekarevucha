@@ -1,5 +1,6 @@
-// src/sanity/schema/event.ts
+// src/sanity/schemas/event.ts
 import { defineField, defineType } from 'sanity';
+import { Event } from '../../types'; // וודא שזה הנתיב הנכון ל-src/types/index.ts
 
 export default defineType({
   name: 'event',
@@ -17,7 +18,7 @@ export default defineType({
       name: 'date',
       title: 'תאריך ושעת האירוע',
       type: 'datetime',
-      description: 'התאריך והשעה המדויקים של האירוע.', // הוספת description
+      description: 'התאריך והשעה המדויקים של האירוע.',
       validation: Rule => Rule.required().error('תאריך ושעת האירוע הם שדה חובה.'),
     }),
     defineField({
@@ -49,7 +50,8 @@ export default defineType({
       type: 'url',
       description: 'הדבק כאן את הקישור לדף הסליקה של Morning. חובה אם הסטטוס הוא "פתוח להרשמה".',
       validation: Rule => Rule.uri({ scheme: ['http', 'https'] }).custom((url, context) => {
-        if (context.parent?.status === 'open' && !url) {
+        const event = context.parent as Event; // הוספה זו פותרת את שגיאת הטיפוסים
+        if (event?.status === 'open' && !url) {
           return 'קישור הרשמה חובה כאשר סטטוס ההרשמה "פתוח להרשמה".';
         }
         return true;
@@ -61,7 +63,7 @@ export default defineType({
       type: 'image',
       options: { hotspot: true },
       description: 'תמונה מייצגת עבור האירוע (תוצג בעמוד "איך זה עובד?").',
-      validation: Rule => Rule.required().error('תמונת האירוע היא שדה חובה.'), // הוספת ולידציה לתמונה
+      validation: Rule => Rule.required().error('תמונת האירוע היא שדה חובה.'),
     })
   ],
   preview: {
@@ -72,20 +74,30 @@ export default defineType({
       media: 'imageUrl'
     },
     prepare(selection) {
-      const {title, date, status, media} = selection
-      const formattedDate = date ? new Date(date).toLocaleDateString('he-IL') : 'אין תאריך'
-      const statusText = {
+      const {title, date, status, media} = selection;
+      const formattedDate = date ? new Date(date).toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' }) : 'אין תאריך';
+      
+      // הגדרת טיפוס מפורש למפתח סטטוס
+      type EventStatusKey = 'open' | 'closed' | 'finished' | 'soon';
+      
+      // ביצוע type assertion על מנת לוודא ש-status הוא EventStatusKey
+      const statusKey = status as EventStatusKey;
+      
+      // הגדרת מפה של סטטוסי טקסט עם טיפוס מפורש
+      const statusTextMap: Record<EventStatusKey, string> = {
           'open': 'פתוח להרשמה',
           'closed': 'הרשמה נסגרה',
           'finished': 'הסתיים',
           'soon': 'בקרוב',
-      }[status] || status;
+      };
+      
+      const statusText = statusTextMap[statusKey] || statusKey; // שימוש במפה המתוקנת
 
       return {
         title: title,
         subtitle: `${formattedDate} | סטטוס: ${statusText}`,
         media: media,
-      }
+      };
     },
   },
-})
+});

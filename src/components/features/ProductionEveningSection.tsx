@@ -1,4 +1,3 @@
-// src/components/features/ProductionEveningSection.tsx
 'use client';
 
 import React, { FC } from 'react';
@@ -17,13 +16,14 @@ const containerVariants = {
   },
 };
 
+// ======================= התיקון כאן =======================
 const itemVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      type: 'spring',
+      type: 'spring' as const,
       stiffness: 100,
       damping: 12,
       duration: 0.5,
@@ -33,13 +33,14 @@ const itemVariants = {
 
 const bonusButtonVariants = {
   hidden: { scale: 0, opacity: 0 },
-  visible: { scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 200, damping: 15, delay: 0.5 } },
+  visible: { scale: 1, opacity: 1, transition: { type: 'spring' as const, stiffness: 200, damping: 15, delay: 0.5 } },
 };
 
 const workshopItemVariants = {
   hidden: { opacity: 0, x: -50 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
 };
+// ===================== סוף התיקון =======================
 
 const mentalCoachingItem = {
   title: "ליווי ואימון מנטלי",
@@ -86,7 +87,6 @@ export const ProductionEveningSection: FC = () => {
   }) || [];
 
   return (
-    // ה-ID הנכון והמקורי נשאר כאן
     <motion.section
       id="the-experience"
       className="py-24 sm:py-32 bg-brand-cream"

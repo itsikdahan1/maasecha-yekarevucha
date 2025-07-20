@@ -1,9 +1,8 @@
-// src/components/features/ContactSection.tsx
-'use client'; 
+'use client';
 import React, { FC } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import Link from 'next/link';
-import { motion } from 'framer-motion'; 
+import { motion } from 'framer-motion';
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -11,45 +10,40 @@ const sectionVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: 'spring',
+      type: 'spring' as const,
       stiffness: 70,
       damping: 10,
       when: "beforeChildren",
-      staggerChildren: 0.15, 
+      staggerChildren: 0.15,
     },
   },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
 };
 
 const iconVariants = {
   hidden: { opacity: 0, scale: 0.5 },
-  visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 150, damping: 10 } },
+  visible: { opacity: 1, scale: 1, transition: { type: 'spring' as const, stiffness: 150, damping: 10 } },
 };
-
 
 export const ContactSection: FC = () => {
   return (
     <motion.section
       id="contact"
-      className="bg-brand-dark relative overflow-hidden py-24 sm:py-32" 
+      className="bg-brand-dark relative overflow-hidden py-24 sm:py-32"
       dir="rtl"
       initial="hidden"
-      whileInView="visible" 
-      // ======================= התיקון כאן =======================
-      // שינינו את amount ל-0.1 כדי שהאנימציה תתחיל כמעט מיד
-      viewport={{ once: true, amount: 0.1 }} 
-      // ===================== סוף התיקון =======================
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
       variants={sectionVariants}
     >
       <div className="container mx-auto px-6 py-0 text-center relative z-10">
         <motion.div variants={iconVariants} className="mb-8 flex justify-center">
             <Icon name="gem" className="w-20 h-20 text-brand-cyan drop-shadow-lg" />
         </motion.div>
-
         <motion.h2
           className="text-4xl sm:text-5xl font-bold text-white tracking-tight"
           variants={itemVariants}

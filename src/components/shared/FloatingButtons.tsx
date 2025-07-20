@@ -29,10 +29,22 @@ export const FloatingButtons: FC = () => {
         setIsMenuOpen(false);
     };
 
-    const mainButtonVariants = { open: { rotate: 45 }, closed: { rotate: 0 } };
+    const mainButtonVariants = {
+        open: { rotate: 45 },
+        closed: { rotate: 0 },
+    };
+
     const itemVariants = {
-        open: { opacity: 1, y: 0, transition: { type: 'tween', ease: 'easeOut', duration: 0.3 } },
-        closed: { opacity: 0, y: 20, transition: { duration: 0.2 } },
+        open: {
+            opacity: 1,
+            y: 0,
+            transition: { type: 'tween' as const, ease: 'easeOut' as const, duration: 0.3 },
+        },
+        closed: {
+            opacity: 0,
+            y: 20,
+            transition: { duration: 0.2 },
+        },
     };
 
     const buttons = [
@@ -102,7 +114,7 @@ export const FloatingButtons: FC = () => {
                         aria-label="פתח תפריט נגישות"
                         title="פתח תפריט נגישות"
                         initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0, transition: { delay: 0.1, duration: 0.3, ease: "easeOut" } }}
+                        animate={{ opacity: 1, x: 0, transition: { delay: 0.1, duration: 0.3, ease: "easeOut" as const } }}
                         exit={{ opacity: 0, x: 50, transition: { duration: 0.2 } }}
                     > 
                         <Icon name="accessibilityNew" className="w-8 h-8 md:w-9 md:h-9" />

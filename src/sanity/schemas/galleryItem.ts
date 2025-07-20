@@ -1,5 +1,6 @@
 // src/sanity/schema/galleryItem.ts
 import { defineField, defineType } from 'sanity';
+import { GalleryItem } from '../../types'; // <--- וודא שזה הנתיב הנכון ל-src/types/index.ts
 
 export default defineType({
   name: 'galleryItem',
@@ -32,9 +33,10 @@ export default defineType({
       title: 'תמונה',
       type: 'image',
       options: { hotspot: true },
-      hidden: ({ parent }) => parent?.itemType !== 'image',
+      hidden: ({ parent }) => (parent as GalleryItem)?.itemType !== 'image', // וודא Cast גם כאן
       validation: Rule => Rule.custom((image, context) => {
-        if (context.parent?.itemType === 'image' && !image) {
+        const galleryItem = context.parent as GalleryItem; // <--- הוספה זו פותרת את שגיאת הטיפוסים
+        if (galleryItem?.itemType === 'image' && !image) {
           return 'תמונה חובה עבור פריט מסוג "תמונה".';
         }
         return true;
@@ -45,9 +47,10 @@ export default defineType({
       title: 'קישור לוידאו (YouTube/Vimeo)',
       type: 'url',
       description: 'ודא שהקישור הוא ל-YouTube או Vimeo. לדוגמה: https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      hidden: ({ parent }) => parent?.itemType !== 'video',
+      hidden: ({ parent }) => (parent as GalleryItem)?.itemType !== 'video', // וודא Cast גם כאן
       validation: Rule => Rule.custom((url, context) => {
-        if (context.parent?.itemType === 'video' && !url) {
+        const galleryItem = context.parent as GalleryItem; // <--- הוספה זו פותרת את שגיאת הטיפוסים
+        if (galleryItem?.itemType === 'video' && !url) {
           return 'קישור וידאו חובה עבור פריט מסוג "וידאו".';
         }
         if (url && !/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|vimeo\.com)\/.+$/.test(url)) {

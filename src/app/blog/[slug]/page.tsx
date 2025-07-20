@@ -1,6 +1,6 @@
 import React from 'react';
 import { getPost, urlFor } from '@/lib/sanity';
-import type { Post } from '@/types';
+import { Post } from '@/types'; // ודא שזה הייבוא הנכון
 import Link from 'next/link';
 import { PortableText, PortableTextComponents } from '@portabletext/react';
 import { Icon } from '@/components/ui/Icon';
@@ -19,8 +19,7 @@ const portableTextComponents: PortableTextComponents = {
     number: ({ children }) => <ol className="list-decimal list-outside mt-6 space-y-3 rtl:mr-6">{children}</ol>,
   },
   block: {
-    // הגדלת גודל הפונט עבור פסקאות רגילות
-    normal: ({ children }) => <p className="text-xl md:text-2xl leading-relaxed my-6">{children}</p>, // <--- השינוי העיקרי כאן
+    normal: ({ children }) => <p className="text-xl md:text-2xl leading-relaxed my-6">{children}</p>,
     h2: ({ children }) => <h2 className="text-3xl md:text-4xl font-bold mt-12 mb-4 text-brand-dark">{children}</h2>,
     h3: ({ children }) => <h3 className="text-2xl md:text-3xl font-bold mt-10 mb-4 text-brand-dark">{children}</h3>,
     h4: ({ children }) => <h4 className="text-xl md:text-2xl font-bold mt-8 mb-3 text-brand-dark">{children}</h4>,
@@ -88,7 +87,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     </div>
                 </div>
                 
-                {/* הסרנו את ה-prose-p:text-xl מכיוון שאנחנו שולטים בגודל ישירות ברכיב ה-PortableTextComponents */}
                 <div className="prose prose-lg lg:prose-xl max-w-none text-brand-dark/90 prose-headings:text-brand-dark prose-a:text-brand-cyan text-right"> 
                     {post.content && <PortableText value={post.content} components={portableTextComponents} />}
                 </div>

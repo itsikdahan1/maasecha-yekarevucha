@@ -1,17 +1,15 @@
-// src/components/features/AiToolsSection.tsx
 'use client';
 import React, { useState, FC } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// אנימציות - ליטוש אנימציות גלובלי
 const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
         opacity: 1,
         y: 0,
         transition: {
-            type: 'spring',
+            type: 'spring' as const,
             stiffness: 70,
             damping: 10,
         },
@@ -20,7 +18,7 @@ const sectionVariants = {
 
 const contentVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
 };
 
 const tabButtonVariants = {
@@ -31,15 +29,17 @@ const tabButtonVariants = {
         transition: {
             delay: i * 0.05,
             duration: 0.3,
-            ease: "easeOut"
+            ease: "easeOut" as const
         },
     }),
 };
 
 const resultBoxVariants = {
     hidden: { opacity: 0, scale: 0.95 },
-    visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 100, damping: 10 } },
+    visible: { opacity: 1, scale: 1, transition: { type: 'spring' as const, stiffness: 100, damping: 10 } },
 };
+
+// ... (שאר הקוד נשאר זהה)
 
 
 const renderFormattedText = (text: string) => {
@@ -136,8 +136,7 @@ export const AiToolsSection: FC = () => {
     return (
         <motion.section
             id="ai-tools"
-            // *** שינוי מרכזי כאן: צמצום משמעותי של ה-padding העליון והתחתון של הסקשן הראשי ***
-            className="py-10 sm:py-16 bg-brand-cream overflow-x-hidden" 
+            className="py-10 sm:py-16 bg-brand-cream overflow-x-hidden"
             dir="rtl"
             initial="hidden"
             whileInView="visible"
@@ -145,17 +144,15 @@ export const AiToolsSection: FC = () => {
             variants={sectionVariants}
         >
             <div className="container mx-auto px-6 lg:px-8">
-                <div className="text-center mb-12"> {/* החזרת ה-mb-12 המקורי כדי לשמור על הרווח בין הטקסט לטאבים */}
+                <div className="text-center mb-12">
                     <p className="mt-2 text-4xl sm:text-5xl font-bold text-brand-dark tracking-tight">היועץ החכם לדרך</p>
-                    {/* *** שינוי מרכזי כאן: הגדלת max-w ושינוי leading כדי שהפיסקה תישאר בשורה אחת ככל הניתן *** */}
-                    {/* חזרתי ל-text-lg המקורי כפי שביקשת, והגדלתי את max-w ואת ה-leading (ריווח שורות) */}
                     <p className="max-w-3xl mt-6 mx-auto text-lg text-brand-slate leading-normal">
                         לא יודעים איך להתחיל? מתלבטים מה לכתוב על עצמכם? קבלו עזרה מהיועץ החכם שלנו.
                     </p>
                 </div>
                 <div className="max-w-4xl mx-auto">
                     {/* Desktop Tabs */}
-                    <div className="hidden sm:flex justify-center mb-8 gap-x-6"> {/* חזרתי ל-mb-8 ו-gap-x-6 המקוריים */}
+                    <div className="hidden sm:flex justify-center mb-8 gap-x-6">
                         {tabs.map((tab, i) => (
                             <motion.button
                                 key={tab.id}
@@ -166,14 +163,14 @@ export const AiToolsSection: FC = () => {
                                 variants={tabButtonVariants}
                                 custom={i}
                             >
-                                <Icon name={tab.icon} className="w-5 h-5 text-brand-cyan" /> {/* החזרת גודל אייקון מקורי */}
+                                <Icon name={tab.icon} className="w-5 h-5 text-brand-cyan" />
                                 <span>{tab.label}</span>
                             </motion.button>
                         ))}
                     </div>
                     {/* Mobile Select Menu */}
-                    <div className="sm:hidden mb-6"> {/* חזרתי ל-mb-6 המקורי */}
-                        <select onChange={(e) => setActiveTab(e.target.value)} value={activeTab} className="w-full p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan bg-white text-lg shadow-sm"> {/* חזרתי ל-p-4 ו-text-lg מקוריים */}
+                    <div className="sm:hidden mb-6">
+                        <select onChange={(e) => setActiveTab(e.target.value)} value={activeTab} className="w-full p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-cyan bg-white text-lg shadow-sm">
                             {tabs.map(tab => (
                                 <option key={tab.id} value={tab.id}>{tab.label}</option>
                             ))}
@@ -187,7 +184,7 @@ export const AiToolsSection: FC = () => {
                         animate="visible"
                         exit="hidden"
                         variants={contentVariants}
-                        className="bg-brand-light-gray/70 backdrop-blur-md pt-6 pb-8 px-8 sm:pt-8 sm:pb-10 sm:px-12 rounded-2xl shadow-2xl border border-slate-200/50" // ללא שינוי, בהתאם לבקשתך לא לצמצם רווחים פנימיים באלמנטים
+                        className="bg-brand-light-gray/70 backdrop-blur-md pt-6 pb-8 px-8 sm:pt-8 sm:pb-10 sm:px-12 rounded-2xl shadow-2xl border border-slate-200/50"
                     >
                         <AnimatePresence mode="wait">
                             {activeTab === 'profile' && (

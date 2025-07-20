@@ -1,5 +1,4 @@
-// C:\Users\USER\maasecha-v2\src\components\faq\FaqPageClient.tsx
-'use client'; // <-- חובה שורה זו בראש הקובץ!
+'use client';
 
 import { Faq } from "@/types";
 import { PortableText, PortableTextComponents } from "@portabletext/react";
@@ -8,7 +7,6 @@ import { AskQuestionForm } from "@/components/features/AskQuestionForm";
 import { Icon } from '@/components/ui/Icon';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// הגדרת הרכיבים ל-PortableText
 const portableTextComponents: PortableTextComponents = {
   list: {
     bullet: ({ children }) => <ul className="list-disc list-inside mt-4 space-y-2">{children}</ul>,
@@ -23,14 +21,13 @@ const portableTextComponents: PortableTextComponents = {
   },
 };
 
-// אנימציות
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      type: 'spring',
+      type: 'spring' as const,
       stiffness: 70,
       damping: 10,
       staggerChildren: 0.1,
@@ -40,14 +37,13 @@ const sectionVariants = {
 
 const faqItemVariants = {
   hidden: { opacity: 0, x: -50 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
 };
 
 interface FaqPageProps {
   faqs: Faq[];
 }
 
-// זו הקומפוננטה הלקוחית שרונדרה בצד הלקוח בלבד
 export const FaqPageClient: React.FC<FaqPageProps> = ({ faqs }) => {
   const [openFaqId, setOpenFaqId] = useState<string | null>(null);
 
@@ -117,7 +113,7 @@ export const FaqPageClient: React.FC<FaqPageProps> = ({ faqs }) => {
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            transition={{ duration: 0.3, ease: "easeOut" as const }}
                             className="mt-4 pr-4 border-r-2 border-brand-cyan prose prose-lg text-brand-slate max-w-none"
                           >
                             <PortableText value={faq.answer} components={portableTextComponents} />

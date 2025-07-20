@@ -1,6 +1,6 @@
 // src/components/features/WhyUsSection.tsx
 'use client';
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC } from 'react';
 import { motion } from 'framer-motion';
 import { Icon } from '@/components/ui/Icon';
 
@@ -36,55 +36,26 @@ const itemEnterVariants = {
     transition: {
       delay: i * 0.08,
       duration: 0.7,
-      ease: [0.22, 1, 0.36, 1],
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   }),
 };
 
 const sectionTextVariants = {
   hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" as const } },
 };
 
 const iconGlowVariants = {
     hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.3, ease: "easeOut" } },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.3, ease: "easeOut" as const } },
 };
 
 export const WhyUsSection: FC = () => {
-    const [isMounted, setIsMounted] = useState(false);
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
     return (
-        // ======================= התיקון כאן =======================
-        // הסרנו את המזהה id="the-experience" מהסקשן הזה
-        <section className="relative py-24 sm:py-32 bg-gradient-to-b from-brand-cream to-white overflow-hidden" dir="rtl">
-        {/* ===================== סוף התיקון ======================= */}
-            {isMounted && (
-                <div className="absolute inset-0 z-0 opacity-40">
-                    <svg className="w-full h-full" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <motion.circle 
-                            cx={300} cy={150} r={100}
-                            fill="#06b6d4" className="mix-blend-multiply blur-3xl opacity-10"
-                            animate={{ cx: [300, 350, 300], cy: [150, 200, 150], r: [100, 120, 100] }}
-                            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-                        />
-                        <motion.ellipse 
-                            cx={1100} cy={650} rx={120} ry={80}
-                            fill="#1a202c" className="mix-blend-multiply blur-3xl opacity-10"
-                            animate={{ cx: [1100, 1050, 1100], cy: [650, 600, 650], rx: [120, 140, 120] }}
-                            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                        />
-                        <motion.path d="M100 700 Q 300 600 500 700 T 900 700 Q 1100 800 1300 700" stroke="#06b6d4" strokeWidth="1" className="opacity-10"
-                            animate={{ pathLength: [0, 1] }}
-                            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                        />
-                    </svg>
-                </div>
-            )}
+        // ======================= התיקון הסופי כאן =======================
+        // הסרנו את ה-SVG הבעייתי לחלוטין. השארנו רק את הרקע הנקי.
+        <section className="relative py-24 sm:py-32 bg-gradient-to-b from-brand-cream to-white" dir="rtl">
             <div className="container mx-auto px-6 lg:px-8 relative z-10">
                 <div className="text-center mb-20">
                     <motion.h2 

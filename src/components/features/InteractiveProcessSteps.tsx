@@ -22,6 +22,8 @@ const processSteps = [
     }
 ];
 
+// ======================= התיקון כאן =======================
+// הוספנו 'as const' כדי ש-TypeScript יבין שהערכים קבועים ומדויקים
 const cardVariants = {
   offscreen: {
     y: 50,
@@ -31,19 +33,17 @@ const cardVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      // type: "spring", // <-- שינוי: מעבר ל-tween לאנימציה חלקה יותר
-      // bounce: 0.4,
       duration: 0.8,
-      ease: [0.2, 0.6, 0.4, 1], // <-- Custom cubic-bezier
+      ease: [0.2, 0.6, 0.4, 1] as const, // <-- הוספנו as const
     }
   }
 };
+// ===================== סוף התיקון =======================
 
 export const InteractiveProcessSteps = () => {
   return (
     <div className="mt-24 max-w-4xl mx-auto">
       <div className="relative">
-        {/* The connecting line - visible on larger screens */}
         <div className="hidden md:block absolute left-1/2 -translate-x-1/2 top-12 h-[calc(100%-6rem)] w-0.5 bg-slate-200/70" aria-hidden="true"></div>
 
         <div className="space-y-16 md:space-y-24">
@@ -59,7 +59,7 @@ export const InteractiveProcessSteps = () => {
               <div className="relative z-10 flex-shrink-0 bg-brand-cyan text-white w-28 h-28 rounded-full flex items-center justify-center shadow-lg shadow-cyan-500/30">
                 <Icon name={step.icon} className="w-14 h-14" />
               </div>
-              <div className="w-full max-w-lg mt-[-3rem] pt-16 pb-8 px-8 bg-white rounded-2xl shadow-xl border border-slate-200/80 text-right"> {/* <-- שינוי text-center ל-text-right */}
+              <div className="w-full max-w-lg mt-[-3rem] pt-16 pb-8 px-8 bg-white rounded-2xl shadow-xl border border-slate-200/80 text-right">
                 <h3 className="text-3xl font-bold text-brand-dark">{step.title}</h3>
                 <p className="mt-4 text-lg text-brand-slate leading-relaxed">{step.description}</p>
               </div>

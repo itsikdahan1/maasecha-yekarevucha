@@ -1,8 +1,8 @@
 // src/components/shared/PageTransition.tsx
-'use client'; // וודא שזה קיים, וזה קיים בקוד שלך
+'use client';
 
 import { motion } from 'framer-motion';
-import { usePathname } from 'next/navigation'; // ייבוא usePathname
+import { usePathname } from 'next/navigation';
 
 const pageVariants = {
   initial: {
@@ -20,17 +20,17 @@ const pageVariants = {
 };
 
 const pageTransition = {
-  type: 'tween',
-  ease: 'anticipate', // AnimatePresence לעיתים מתקשה עם ease אגרסיבי כמו anticipate
+  type: 'tween' as const, // תיקון כאן
+  ease: 'anticipate' as const, // תיקון כאן
   duration: 0.4,
 };
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => {
-  const pathname = usePathname(); // קבל את הנתיב הנוכחי
+  const pathname = usePathname();
 
   return (
     <motion.div
-      key={pathname} // 💡 שינוי קריטי: הוספת key מבוסס על הנתיב
+      key={pathname}
       initial="initial"
       animate="in"
       exit="out"
