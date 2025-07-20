@@ -1,27 +1,29 @@
+// src/components/features/AiToolsSection.tsx
 'use client';
 import React, { useState, FC } from 'react';
 import { Icon } from '@/components/ui/Icon';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion'; // ודא ש-Variants מיובא
 
-const sectionVariants = {
+// אנימציות - ליטוש אנימציות גלובלי
+const sectionVariants: Variants = { // הוספתי טיפוס Variants מפורש
     hidden: { opacity: 0, y: 50 },
     visible: {
         opacity: 1,
         y: 0,
         transition: {
-            type: 'spring' as const,
+            // שורה זו הוסרה: type: 'spring',
             stiffness: 70,
             damping: 10,
         },
     },
 };
 
-const contentVariants = {
+const contentVariants: Variants = { // הוספתי טיפוס Variants מפורש
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
-const tabButtonVariants = {
+const tabButtonVariants: Variants = { // הוספתי טיפוס Variants מפורש
     hidden: { opacity: 0, y: -20 },
     visible: (i: number) => ({
         opacity: 1,
@@ -29,17 +31,15 @@ const tabButtonVariants = {
         transition: {
             delay: i * 0.05,
             duration: 0.3,
-            ease: "easeOut" as const
+            ease: "easeOut"
         },
     }),
 };
 
-const resultBoxVariants = {
+const resultBoxVariants: Variants = { // הוספתי טיפוס Variants מפורש
     hidden: { opacity: 0, scale: 0.95 },
-    visible: { opacity: 1, scale: 1, transition: { type: 'spring' as const, stiffness: 100, damping: 10 } },
+    visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 100, damping: 10 } },
 };
-
-// ... (שאר הקוד נשאר זהה)
 
 
 const renderFormattedText = (text: string) => {
@@ -113,11 +113,33 @@ export const AiToolsSection: FC = () => {
             finalRegion = dateCityFreeText.trim();
         }
 
-        let prompt = `הצע 3 רעיונות מקוריים לפגישה ראשונה עבור זוג מהמגזר הדתי. הרעיונות צריכים להתאים לקריטריונים הבאים: אזור - ${finalRegion}, תקציב - ${dateBudget}, אווירה רצויה - ${dateAtmosphere}.`;
+        // --- התיקון ב-prompt מתחיל כאן ---
+        let prompt = `אתה "היועץ החכם לפגישות שידוכים" של "מעשיך יקרבוך".
+הצע 3 רעיונות מקוריים, יצירתיים, וראויים לפגישה ראשונה עבור זוג מהמגזר הדתי/חרדי.
+חשוב מאוד: פגישה ראשונה בשידוכים מהמגזר הדתי/חרדי מתמקדת בשיחה, הכרות עמוקה, ובדיקת התאמה ערכית ורוחנית.
+הימנע לחלוטין מ:
+- רעיונות הכוללים אינטימיות פיזית כלשהי (גם קלה).
+- סדנאות טיפוליות או ייעוץ זוגי.
+- פעילויות רועשות או המוניות מדי שאינן מאפשרות שיחה עמוקה.
+- מקומות שאינם צנועים או הולמים לציבור הדתי/חרדי (לדוגמה, מקומות בילוי ליליים, ברים, מועדונים).
+- הצעות שאינן מעודדות דיבור ובירור מידות.
+התמקד ב:
+- אווירה מכבדת, צנועה ורגועה.
+- מקומות המאפשרים שיחה רציפה ונוחה.
+- פעילויות שיכולות לחשוף תכונות אופי, ערכים ותחומי עניין.
+- רעיונות לפגישה ראשונה, לא לפגישות מתקדמות או זוגיות.
+
+האירוע צריך להתאים לקריטריונים הבאים:
+אזור: ${finalRegion}
+תקציב: ${dateBudget}
+אווירה רצויה: ${dateAtmosphere}
+`;
         if (dateFreeText.trim()) {
             prompt += ` קחו בחשבון גם את הפרטים הבאים: "${dateFreeText}".`;
         }
-        prompt += ` הצג כל הצעה בפורמט ברור עם כותרת, תיאור, ומדוע זו פגישה טובה. לדוגמא: #### 1. שם הרעיון\nתיאור:...\nלמה זה טוב: ...`;
+        prompt += ` הצג כל הצעה בפורמט ברור עם כותרת (שם הרעיון), תיאור מפורט, ו"למה זה טוב" (הסבר למה הפגישה טובה במיוחד לשידוכים).`;
+        // --- סוף התיקון ב-prompt ---
+
         callApi(prompt, setIsDateLoading, setDateIdeas);
     };
 

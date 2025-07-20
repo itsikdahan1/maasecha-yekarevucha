@@ -1,12 +1,13 @@
+// src/components/features/ProductionEveningSection.tsx
 'use client';
 
 import React, { FC } from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/ui/Icon';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion'; // ייבוא Variants
 import { productionEvening } from '@/lib/data';
 
-const containerVariants = {
+const containerVariants: Variants = { // הוספת טיפוס Variants
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -16,8 +17,7 @@ const containerVariants = {
   },
 };
 
-// ======================= התיקון כאן =======================
-const itemVariants = {
+const itemVariants: Variants = { // הוספת טיפוס Variants
   hidden: { opacity: 0, y: 50 },
   visible: {
     opacity: 1,
@@ -31,16 +31,15 @@ const itemVariants = {
   },
 };
 
-const bonusButtonVariants = {
+const bonusButtonVariants: Variants = { // הוספת טיפוס Variants
   hidden: { scale: 0, opacity: 0 },
   visible: { scale: 1, opacity: 1, transition: { type: 'spring' as const, stiffness: 200, damping: 15, delay: 0.5 } },
 };
 
-const workshopItemVariants = {
+const workshopItemVariants: Variants = { // הוספת טיפוס Variants
   hidden: { opacity: 0, x: -50 },
   visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
 };
-// ===================== סוף התיקון =======================
 
 const mentalCoachingItem = {
   title: "ליווי ואימון מנטלי",
@@ -53,12 +52,12 @@ export const ProductionEveningSection: FC = () => {
 
   if (!info) {
     return (
-      <section id="the-experience" className="py-24 sm:py-32 bg-brand-cream" dir="rtl">
+      <section id="the-experience" className="py-24 sm:py-32 bg-white" dir="rtl">
         <div className="container mx-auto px-6 lg:px-8 text-center">
-          <h2 className="text-4xl sm:text-5xl font-bold text-brand-dark tracking-tight">
+          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-brand-dark sm:text-5xl">
             חווית הפקה שטרם הכרתם
           </h2>
-          <p className="max-w-3xl mt-6 mx-auto text-lg text-brand-slate leading-relaxed">
+          <p className="mt-4 text-xl text-brand-slate">
             נתוני חווית ההפקה אינם זמינים כרגע.
           </p>
         </div>
@@ -88,12 +87,12 @@ export const ProductionEveningSection: FC = () => {
 
   return (
     <motion.section
-      id="the-experience"
+      id="the-experience" // שימו לב שה-ID הוא "the-experience"
       className="py-24 sm:py-32 bg-brand-cream"
       dir="rtl"
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: true, amount: 0.1 }} // <--- שינוי amount ל-0.1
       variants={containerVariants}
     >
       <div className="container mx-auto px-6 lg:px-8">
@@ -114,7 +113,7 @@ export const ProductionEveningSection: FC = () => {
               variants={itemVariants}
             >
               <div className="flex justify-center mb-5">
-                <div className="flex-shrink-0 bg-brand-cyan text-white w-20 h-20 rounded-full flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <div className="flex-shrink-0 flex items-center justify-center h-20 w-20 rounded-full bg-brand-cyan shadow-lg shadow-cyan-500/20 text-white">
                   <Icon name={item.icon} className="w-9 h-9"/>
                 </div>
               </div>

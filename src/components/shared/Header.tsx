@@ -42,7 +42,8 @@ export const Header: FC = () => {
 
     const lastPathnameRef = React.useRef(pathname);
     useEffect(() => {
-        if (isMobileMenuOpen && (pathname !== lastPathnameRef.current || !pathname.includes('#'))) {
+        // תיקון הלוגיקה: סגור את התפריט רק במעבר עמוד אמיתי, לא בעוגנים באותו עמוד
+        if (isMobileMenuOpen && pathname !== lastPathnameRef.current) {
             setIsMobileMenuOpen(false);
         }
         lastPathnameRef.current = pathname;
@@ -68,7 +69,7 @@ export const Header: FC = () => {
             y: "0%",
             transition: {
                 duration: 0.4,
-                ease: "easeOut" as const, // תיקון ה-ease
+                ease: "easeOut" as const, 
                 when: "beforeChildren",
                 staggerChildren: 0.06,
             },
@@ -76,18 +77,18 @@ export const Header: FC = () => {
         exit: {
             opacity: 0,
             y: "-100%",
-            transition: { duration: 0.3, ease: "easeIn" as const }, // תיקון ה-ease
+            transition: { duration: 0.3, ease: "easeIn" as const }, 
         },
     };
 
     const mobileLinkVariants = {
         hidden: { x: -30, opacity: 0 },
-        visible: { x: 0, opacity: 1, transition: { duration: 0.3, ease: "easeOut" as const } }, // תיקון ה-ease
+        visible: { x: 0, opacity: 1, transition: { duration: 0.3, ease: "easeOut" as const } }, 
     };
 
     const ctaMobileVariant = {
         hidden: { y: 20, opacity: 0 },
-        visible: { y: 0, opacity: 1, transition: { delay: navLinks.length * 0.06 + 0.1, duration: 0.4, ease: "easeOut" as const } }, // תיקון ה-ease
+        visible: { y: 0, opacity: 1, transition: { delay: navLinks.length * 0.06 + 0.1, duration: 0.4, ease: "easeOut" as const } }, 
     };
 
     const isActiveLink = (href: string) => {
@@ -107,22 +108,27 @@ export const Header: FC = () => {
                 }`}
                 dir="rtl"
             >
+                {/* תיקון: חזרה ל-justify-between במצב md (טאבלט) */}
+                {/* שינוי: md:gap-x-4 במקום md:gap-x-8 כדי לצמצם מרווחים ב-md */}
                 <div className="container mx-auto px-6 lg:px-8 py-4 flex items-center justify-between relative">
-                    <div className="flex-shrink-0 z-20">
+                    {/* לוגו - רוחב גמיש ללוגו כדי שיתכווץ אם צריך */}
+                    <div className="flex-shrink-0 z-20"> 
                         <Link href="/" aria-label="חזרה לדף הבית">
                             <Image 
                                 src="/images/LOGO.svg" 
                                 alt="לוגו מעשיך יקרבוך" 
                                 width={160}
                                 height={40}
-                                className="h-10 md:h-14 w-auto"
+                                className="h-10 md:h-14 w-auto" // w-auto מאפשר גמישות
                                 priority
                             />
                         </Link>
                     </div>
 
-                    <nav className="hidden md:absolute md:inset-x-0 md:flex md:justify-center md:items-center h-full z-10">
-                        <ul className="flex space-x-8 space-x-reverse">
+                    {/* ניווט דסקטופ/טאבלט */}
+                    {/* תיקון: md:flex (גלוי בטאבלט), ו-flex-grow לניווט כדי שידחוף את כפתור ה-CTA */}
+                    <nav className="hidden md:flex flex-grow justify-center items-center h-full z-10"> {/* md:flex ו-flex-grow */}
+                        <ul className="flex space-x-2 md:space-x-4 lg:space-x-8 space-x-reverse"> 
                             {navLinks.map((link) => (
                                 <li key={link.name}>
                                     <Link
@@ -158,13 +164,18 @@ export const Header: FC = () => {
                         </ul>
                     </nav>
 
-                    <div className="hidden md:flex flex-shrink-0 z-20">
-                        <Link href="/how-it-works#events" className="btn-dark whitespace-nowrap">איך מתחילים?</Link>
+                    {/* כפתור CTA דסקטופ/טאבלט */}
+                    {/* תיקון: md:flex (גלוי בטאבלט), אין ml-auto, ו-flex-shrink-0 כדי לא לדחוף את הניווט */}
+                    <div className="hidden md:flex flex-shrink-0 z-20"> {/* md:flex */}
+                        <Link href="/how-it-works#events" className="btn-dark whitespace-nowrap">איך מתחילים?</Link> 
                     </div>
 
-                    <div className="md:hidden flex-shrink-0 z-20">
+                    {/* כפתור מובייל (המבורגר) - גלוי רק במובייל קטן */}
+                    <div className="md:hidden flex-shrink-0 z-20"> {/* md:hidden - מוסתר בטאבלט ומעלה */}
                         <button
-                            onClick={() => setIsMobileMenuOpen(true)}
+                            onClick={() => {
+                                setIsMobileMenuOpen(true);
+                            }}
                             className="p-2 text-brand-dark hover:text-brand-cyan transition-colors"
                             aria-label="פתח תפריט מובייל"
                         >
@@ -174,16 +185,19 @@ export const Header: FC = () => {
                 </div>
             </header>
 
+            {/* תפריט מובייל (מופיע רק כ-isMobileMenuOpen הוא true) */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
+                        key="mobile-menu" 
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                         variants={mobileMenuVariants}
-                        className="fixed inset-0 bg-brand-cream z-[200] flex flex-col pt-4 pb-12 px-6 overflow-y-auto min-h-screen h-full" // Z-index מתוקן
+                        className="fixed inset-0 bg-brand-cream z-[200] flex flex-col pt-4 pb-12 px-6 overflow-y-auto min-h-screen h-full" 
                         dir="rtl"
                     >
+                        {/* Header של תפריט המובייל (לוגו וכפתור סגירה) */}
                         <div className="w-full flex justify-between items-center h-20 mb-4">
                             <div className="flex-shrink-0">
                                 <Link href="/" aria-label="חזרה לדף הבית" onClick={() => setIsMobileMenuOpen(false)}>
@@ -205,13 +219,14 @@ export const Header: FC = () => {
                             </button>
                         </div>
 
+                        {/* קישורי ניווט במובייל */}
                         <nav className="flex flex-col items-end gap-y-2 w-full">
                             {navLinks.map((link) => (
                                 <motion.div key={link.name} variants={mobileLinkVariants} className="w-full text-right">
                                     <Link
                                         href={link.href}
                                         onClick={(e) => {
-                                            setIsMobileMenuOpen(false);
+                                            setIsMobileMenuOpen(false); 
                                             if (link.href.includes('#')) {
                                                 const [basePath, fragment] = link.href.split('#');
                                                 if (pathname === basePath || (pathname === '/' && basePath === '')) {
@@ -231,6 +246,7 @@ export const Header: FC = () => {
                                     </Link>
                                 </motion.div>
                             ))}
+                            {/* כפתור CTA במובייל */}
                             <motion.div variants={ctaMobileVariant} className="w-full flex justify-start mt-6">
                                 <Link
                                     href="/how-it-works#events"

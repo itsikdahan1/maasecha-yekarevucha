@@ -49,10 +49,18 @@
 /* ---------------------------------- */
 @layer components {
   .btn-primary {
-    @apply bg-brand-cyan text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-300 hover:bg-brand-cyan-light hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-brand-cyan text-white font-semibold py-3 px-6 rounded-lg 
+           shadow-md transition-all duration-300 ease-out
+           hover:bg-brand-cyan-light hover:-translate-y-1 hover:shadow-lg; /* שיפור צל ב-hover */
   }
   .btn-dark {
-    @apply bg-brand-dark text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-300 hover:bg-slate-700 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-brand-dark text-white font-semibold py-3 px-6 rounded-lg 
+           shadow-md transition-all duration-300 ease-out
+           hover:bg-slate-700 hover:-translate-y-1 hover:shadow-lg; /* שיפור צל ב-hover */
+  }
+  /* סגנונות לכפתורים גדולים יותר (אם יוגדרו בעתיד) */
+  .btn-lg {
+    @apply py-4 px-8 text-lg rounded-xl;
   }
 }
 

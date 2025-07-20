@@ -1,7 +1,7 @@
 // src/components/features/WhyUsSection.tsx
 'use client';
 import React, { FC } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion'; // ייבוא Variants
 import { Icon } from '@/components/ui/Icon';
 
 const pillars = [
@@ -27,7 +27,7 @@ const pillars = [
   }
 ];
 
-const itemEnterVariants = {
+const itemEnterVariants: Variants = { // הוספת טיפוס Variants
   hidden: { opacity: 0, y: 30, scale: 0.95 },
   visible: (i: number) => ({
     opacity: 1,
@@ -41,27 +41,25 @@ const itemEnterVariants = {
   }),
 };
 
-const sectionTextVariants = {
+const sectionTextVariants: Variants = { // הוספת טיפוס Variants
   hidden: { opacity: 0, y: 15 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" as const } },
 };
 
-const iconGlowVariants = {
+const iconGlowVariants: Variants = { // הוספת טיפוס Variants
     hidden: { opacity: 0, scale: 0.8 },
     visible: { opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.3, ease: "easeOut" as const } },
 };
 
 export const WhyUsSection: FC = () => {
     return (
-        // ======================= התיקון הסופי כאן =======================
-        // הסרנו את ה-SVG הבעייתי לחלוטין. השארנו רק את הרקע הנקי.
         <section className="relative py-24 sm:py-32 bg-gradient-to-b from-brand-cream to-white" dir="rtl">
             <div className="container mx-auto px-6 lg:px-8 relative z-10">
                 <div className="text-center mb-20">
                     <motion.h2 
                         initial="hidden" 
                         whileInView="visible" 
-                        viewport={{ once: true, amount: 0.5 }}
+                        viewport={{ once: true, amount: 0.1 }} // <--- שינוי amount ל-0.1
                         variants={sectionTextVariants}
                         className="text-4xl sm:text-5xl font-bold text-brand-dark tracking-tight">
                     מהפכה בדרך שבה מכירים
@@ -69,7 +67,7 @@ export const WhyUsSection: FC = () => {
                     <motion.p 
                         initial="hidden" 
                         whileInView="visible" 
-                        viewport={{ once: true, amount: 0.5 }}
+                        viewport={{ once: true, amount: 0.1 }} // <--- שינוי amount ל-0.1
                         variants={sectionTextVariants}
                         className="max-w-2xl mt-6 mx-auto text-lg text-brand-slate leading-relaxed">
                     שילבנו טכנולוגיה מתקדמת עם הבנה עמוקה של עולם הנפש והשידוכים, כדי ליצור חוויה שלא הכרתם.
@@ -86,7 +84,7 @@ export const WhyUsSection: FC = () => {
                         custom={index}
                         initial="hidden"
                         whileInView="visible"
-                        viewport={{ once: true, amount: 0.4 }}
+                        viewport={{ once: true, amount: 0.1 }} // <--- שינוי amount ל-0.1
                         variants={itemEnterVariants}
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-brand-cyan/0 to-brand-cyan/0 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full blur-xl scale-125"></div>

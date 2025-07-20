@@ -1,3 +1,4 @@
+// src/components/features/CommunitySection.tsx
 'use client';
 import React, { FC } from 'react';
 import { Icon } from '@/components/ui/Icon';
@@ -8,7 +9,9 @@ export const CommunitySection: FC = () => {
     return (
         <section id="community" className="py-24 sm:py-32 bg-gradient-to-br from-brand-dark to-slate-900 text-white" dir="rtl">
             <div className="container mx-auto px-6 lg:px-8">
-                <div className="flex flex-col md:flex-row justify-center items-center gap-16">
+                {/* תיקון: שינוי flex-row breakpoint מ-md ל-lg, והבטחת התוכן גלוי במובייל */}
+                <div className="flex flex-col lg:flex-row justify-center items-center gap-16">
+                    {/* טקסט וקריאה לפעולה - לוודא שהוא לא מוסתר */}
                     <div className="flex flex-col items-center md:items-start text-center md:text-right max-w-lg">
                         <h2 className="text-lg font-semibold text-brand-cyan tracking-wider uppercase">תמיכה לאורך כל הדרך</h2>
                         <p className="mt-4 text-4xl sm:text-5xl font-bold tracking-tight">
@@ -24,11 +27,12 @@ export const CommunitySection: FC = () => {
                             </a>
                         </div>
                     </div>
+                    {/* תמונה - לוודא שהיא לא יוצאת מגבולות המסך במובייל */}
                     <div className="flex-shrink-0">
                         <img 
                             src="/images/Beige.svg" 
                             alt="קהילת מעשיך יקרבוך" 
-                            className="rounded-2xl shadow-2xl w-full max-w-sm" 
+                            className="rounded-2xl shadow-2xl w-full max-w-sm" // וודא ש-max-w-sm מספיק
                         />
                     </div>
                 </div>
