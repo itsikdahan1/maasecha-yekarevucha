@@ -1,4 +1,3 @@
-// src/components/shared/Header.tsx
 'use client';
 
 import React, { FC, useState, useEffect, useContext } from 'react';
@@ -42,7 +41,6 @@ export const Header: FC = () => {
 
     const lastPathnameRef = React.useRef(pathname);
     useEffect(() => {
-        // תיקון הלוגיקה: סגור את התפריט רק במעבר עמוד אמיתי, לא בעוגנים באותו עמוד
         if (isMobileMenuOpen && pathname !== lastPathnameRef.current) {
             setIsMobileMenuOpen(false);
         }
@@ -61,7 +59,6 @@ export const Header: FC = () => {
         { name: "היועץ החכם", href: "/ai-tools", icon: "sparkles" },
     ];
 
-    // תיקונים של 'ease' בכל הווריאנטים
     const mobileMenuVariants = {
         hidden: { opacity: 0, y: "-100%" },
         visible: {
@@ -108,10 +105,7 @@ export const Header: FC = () => {
                 }`}
                 dir="rtl"
             >
-                {/* תיקון: חזרה ל-justify-between במצב md (טאבלט) */}
-                {/* שינוי: md:gap-x-4 במקום md:gap-x-8 כדי לצמצם מרווחים ב-md */}
-                <div className="container mx-auto px-6 lg:px-8 py-4 flex items-center justify-between relative">
-                    {/* לוגו - רוחב גמיש ללוגו כדי שיתכווץ אם צריך */}
+                <div className="container mx-auto px-6 lg:px-8 flex items-center justify-between relative"> 
                     <div className="flex-shrink-0 z-20"> 
                         <Link href="/" aria-label="חזרה לדף הבית">
                             <Image 
@@ -119,21 +113,21 @@ export const Header: FC = () => {
                                 alt="לוגו מעשיך יקרבוך" 
                                 width={160}
                                 height={40}
-                                className="h-10 md:h-14 w-auto" // w-auto מאפשר גמישות
+                                className="h-10 md:h-14 w-auto" 
                                 priority
                             />
                         </Link>
                     </div>
 
-                    {/* ניווט דסקטופ/טאבלט */}
-                    {/* תיקון: md:flex (גלוי בטאבלט), ו-flex-grow לניווט כדי שידחוף את כפתור ה-CTA */}
-                    <nav className="hidden md:flex flex-grow justify-center items-center h-full z-10"> {/* md:flex ו-flex-grow */}
-                        <ul className="flex space-x-2 md:space-x-4 lg:space-x-8 space-x-reverse"> 
+                    {/* ======================= התיקון כאן ======================= */}
+                    {/* שינינו את נקודת השבירה מ-lg ל-xl */}
+                    <nav className="hidden xl:flex absolute inset-0 justify-center items-center z-10 pointer-events-none">
+                        <ul className="flex text-base space-x-8 space-x-reverse pointer-events-auto">
                             {navLinks.map((link) => (
                                 <li key={link.name}>
                                     <Link
                                         href={link.href}
-                                        className={`group relative text-base font-semibold transition-colors duration-300 flex items-center whitespace-nowrap
+                                        className={`group relative font-semibold transition-colors duration-300 flex items-center whitespace-nowrap
                                             ${isActiveLink(link.href)
                                                 ? 'text-brand-cyan'
                                                 : 'text-brand-slate hover:text-brand-cyan'
@@ -164,28 +158,27 @@ export const Header: FC = () => {
                         </ul>
                     </nav>
 
-                    {/* כפתור CTA דסקטופ/טאבלט */}
-                    {/* תיקון: md:flex (גלוי בטאבלט), אין ml-auto, ו-flex-shrink-0 כדי לא לדחוף את הניווט */}
-                    <div className="hidden md:flex flex-shrink-0 z-20"> {/* md:flex */}
-                        <Link href="/how-it-works#events" className="btn-dark whitespace-nowrap">איך מתחילים?</Link> 
-                    </div>
+                    <div className="flex-shrink-0 z-20">
+                        {/* שינינו את נקודת השבירה מ-lg ל-xl */}
+                        <div className="hidden xl:flex"> 
+                            <Link href="/how-it-works#events" className="btn-dark whitespace-nowrap">איך מתחילים?</Link> 
+                        </div>
 
-                    {/* כפתור מובייל (המבורגר) - גלוי רק במובייל קטן */}
-                    <div className="md:hidden flex-shrink-0 z-20"> {/* md:hidden - מוסתר בטאבלט ומעלה */}
-                        <button
-                            onClick={() => {
-                                setIsMobileMenuOpen(true);
-                            }}
-                            className="p-2 text-brand-dark hover:text-brand-cyan transition-colors"
-                            aria-label="פתח תפריט מובייל"
-                        >
-                            <Icon name="menu" className="w-8 h-8" />
-                        </button>
+                        {/* שינינו את נקודת השבירה מ-lg ל-xl */}
+                        <div className="xl:hidden"> 
+                            <button
+                                onClick={() => setIsMobileMenuOpen(true)}
+                                className="p-2 text-brand-dark hover:text-brand-cyan transition-colors"
+                                aria-label="פתח תפריט מובייל"
+                            >
+                                <Icon name="menu" className="w-8 h-8" />
+                            </button>
+                        </div>
                     </div>
+                    {/* ===================== סוף התיקון ======================= */}
                 </div>
             </header>
 
-            {/* תפריט מובייל (מופיע רק כ-isMobileMenuOpen הוא true) */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
@@ -197,7 +190,6 @@ export const Header: FC = () => {
                         className="fixed inset-0 bg-brand-cream z-[200] flex flex-col pt-4 pb-12 px-6 overflow-y-auto min-h-screen h-full" 
                         dir="rtl"
                     >
-                        {/* Header של תפריט המובייל (לוגו וכפתור סגירה) */}
                         <div className="w-full flex justify-between items-center h-20 mb-4">
                             <div className="flex-shrink-0">
                                 <Link href="/" aria-label="חזרה לדף הבית" onClick={() => setIsMobileMenuOpen(false)}>
@@ -219,7 +211,6 @@ export const Header: FC = () => {
                             </button>
                         </div>
 
-                        {/* קישורי ניווט במובייל */}
                         <nav className="flex flex-col items-end gap-y-2 w-full">
                             {navLinks.map((link) => (
                                 <motion.div key={link.name} variants={mobileLinkVariants} className="w-full text-right">
@@ -246,7 +237,6 @@ export const Header: FC = () => {
                                     </Link>
                                 </motion.div>
                             ))}
-                            {/* כפתור CTA במובייל */}
                             <motion.div variants={ctaMobileVariant} className="w-full flex justify-start mt-6">
                                 <Link
                                     href="/how-it-works#events"

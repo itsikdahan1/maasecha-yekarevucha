@@ -40,7 +40,7 @@ export const Footer: FC = () => {
                                     {emailAddress}
                                 </a>
                             </li>
-                             <li>
+                             <li>ז
                                 <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 text-slate-300 hover:text-white transition-colors">
                                     <Icon name="whatsapp" className="w-5 h-5" />
                                     055-308-0685 
