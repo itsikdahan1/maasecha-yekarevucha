@@ -1,6 +1,7 @@
 // app/api/bot/route.ts (for App Router)
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
+export const dynamic = 'force-dynamic';
 
 // --- Configuration ---
 // וודא/י שה-ID של גיליון ה-Google Sheets שלך מוגדר כאן
