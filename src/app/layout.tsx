@@ -28,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <RootLayoutClient>
             {children}
         </RootLayoutClient>
+        <SpeedInsights />
       </body>
     </html>
   );
