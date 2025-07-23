@@ -1,4 +1,4 @@
-// app/api/bot/route.ts (for App Router)
+// app/api/bot/index.ts (for App Router)
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 export const dynamic = 'force-dynamic';
