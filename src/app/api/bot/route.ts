@@ -386,6 +386,7 @@ function getNextStepLogic(lastResponse: string, currentUserState: UserPreference
 
 // --- Main API Handler ---
 export async function POST(request: Request) {
+  console.log('API endpoint was hit!'); // <--- הוסף/י את השורה הזו
   // Ensure authentication (Secret Key)
   const authHeader = request.headers.get('Authorization');
   const SECRET_KEY = process.env.MAKE_SECRET_KEY; // Define this in Vercel Environment Variables
