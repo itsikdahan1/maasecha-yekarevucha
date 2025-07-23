@@ -10,6 +10,11 @@ const GOOGLE_SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
 const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') : null;
 const SECRET_KEY = process.env.MAKE_SECRET_KEY;
 
+// --- Sheet Names (Moved to be accessible by helper functions) ---
+const USERS_SHEET_NAME = "Users";
+const API_TRIGGER_SHEET_NAME = "API_Trigger";
+const ANALYTICS_LOG_SHEET_NAME = "Analytics_Log"; // For future analytics logging
+
 // --- Type Definitions for Conversation Logic (Comprehensive) ---
 type Button = { text: string; value: string };
 type ListRow = { id: string; title: string };
@@ -146,8 +151,8 @@ const GO_BACK_BUTTON: Button = { text: 'חזור לשלב הקודם 🔙', valu
 
 // --- Helper Functions ---
 // Function to get headers from a sheet
-async function getSheetHeaders(sheetName: string): Promise<string[]> {
-  const response = await sheets.spreadsheets.values.get({
+async function getSheetHeaders(sheetsInstance: any, sheetName: string): Promise<string[]> {
+  const response = await sheetsInstance.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
     range: `${sheetName}!1:1`, // Get only the first row (headers)
   });
@@ -155,8 +160,8 @@ async function getSheetHeaders(sheetName: string): Promise<string[]> {
 }
 
 // Function to find a user row by contact and return data as an object
-async function findUserByContact(contact: string, headers: string[]): Promise<{ userData: UserPreferences | null, rowIndex: number }> {
-  const usersResponse = await sheets.spreadsheets.values.get({
+async function findUserByContact(sheetsInstance: any, contact: string, headers: string[]): Promise<{ userData: UserPreferences | null, rowIndex: number }> {
+  const usersResponse = await sheetsInstance.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
     range: `${USERS_SHEET_NAME}!A:Z`, // Fetch all relevant columns
   });
@@ -164,7 +169,7 @@ async function findUserByContact(contact: string, headers: string[]): Promise<{ 
   
   // Find the user row (skip header row)
   // userRowIndex is 0-indexed for array, +1 for Sheets 1-indexed row number
-  const userRowIndex = usersRows.findIndex((row, index) => index > 0 && row[0] === contact);
+  const userRowIndex = usersRows.findIndex((row: any[], index: number) => index > 0 && row[0] === contact);
 
   if (userRowIndex !== -1) {
     const userDataArray = usersRows[userRowIndex];
@@ -181,9 +186,9 @@ async function findUserByContact(contact: string, headers: string[]): Promise<{ 
 }
 
 // Function to update a user row in Google Sheets
-async function updateUserData(rowIndex: number, updatedData: UserPreferences, headers: string[]) {
+async function updateUserData(sheetsInstance: any, rowIndex: number, updatedData: UserPreferences, headers: string[]) {
   const values = headers.map(header => updatedData[header] !== undefined ? updatedData[header] : '');
-  await sheets.spreadsheets.values.update({
+  await sheetsInstance.spreadsheets.values.update({
     spreadsheetId: SPREADSHEET_ID,
     range: `${USERS_SHEET_NAME}!A${rowIndex + 1}`, // +1 because Sheets is 1-indexed
     valueInputOption: 'USER_ENTERED',
@@ -194,9 +199,9 @@ async function updateUserData(rowIndex: number, updatedData: UserPreferences, he
 }
 
 // Function to append a new user row to Google Sheets
-async function appendNewUser(newUserData: UserPreferences, headers: string[]) {
+async function appendNewUser(sheetsInstance: any, newUserData: UserPreferences, headers: string[]) {
   const values = headers.map(header => newUserData[header] !== undefined ? newUserData[header] : '');
-  await sheets.spreadsheets.values.append({
+  await sheetsInstance.spreadsheets.values.append({
     spreadsheetId: SPREADSHEET_ID,
     range: `${USERS_SHEET_NAME}!A:Z`,
     valueInputOption: 'USER_ENTERED',
@@ -208,7 +213,7 @@ async function appendNewUser(newUserData: UserPreferences, headers: string[]) {
 }
 
 // Function to write a trigger to API_Trigger sheet for Blaster
-async function writeApiTrigger(senderId: string, ruleToTrigger: string, actionType: string, payload: { [key: string]: any }) {
+async function writeApiTrigger(sheetsInstance: any, senderId: string, ruleToTrigger: string, actionType: string, payload: { [key: string]: any }) {
   const apiTriggerHeaders = ["Contact", "Message", "Action", "Ready_To_Send", "Sent_Status", "#MESSAGE_TEXT", "#BUTTON_1_TEXT", "#BUTTON_1_VALUE", "#BUTTON_2_TEXT", "#BUTTON_2_VALUE", "#IMAGE_URL", "#PROFILE1_ID", "#PROFILE1_NICKNAME", "#PROFILE1_DESCRIPTION", "#PROFILE1_PICTURE", "#MATCH_REASON", "#CURRENT_MATCH_INDEX", "#BUTTON_3_TEXT", "#BUTTON_3_VALUE", "#BUTTON_4_TEXT", "#BUTTON_4_VALUE"];
   const triggerValues = new Array(apiTriggerHeaders.length).fill('');
 
@@ -226,7 +231,7 @@ async function writeApiTrigger(senderId: string, ruleToTrigger: string, actionTy
     }
   }
 
-  await sheets.spreadsheets.values.append({
+  await sheetsInstance.spreadsheets.values.append({
     spreadsheetId: SPREADSHEET_ID,
     range: `${API_TRIGGER_SHEET_NAME}!A:Z`,
     valueInputOption: 'USER_ENTERED',
@@ -387,15 +392,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Missing sender_id or last_response' }, { status: 400 });
     }
 
+    // 2. Google Sheets API Setup
+    const auth = new google.auth.JWT({
+      email: GOOGLE_SERVICE_ACCOUNT_EMAIL as string,
+      key: GOOGLE_PRIVATE_KEY as string,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+    const sheets = google.sheets({ version: 'v4', auth });
+
     // 1. Get User Headers from Google Sheets
-    const usersHeaders: string[] = await getSheetHeaders(USERS_SHEET_NAME);
+    const usersHeaders: string[] = await getSheetHeaders(sheets, USERS_SHEET_NAME);
     if (usersHeaders.length === 0) {
       console.error(`Headers not found for ${USERS_SHEET_NAME}. Sheet might be empty or misconfigured.`);
       return NextResponse.json({ message: 'Sheet headers not found' }, { status: 500 });
     }
 
     // 2. Load User Data from Google Sheets
-    let { userData: currentUserData, rowIndex: userRowIndex } = await findUserByContact(senderId, usersHeaders);
+    let { userData: currentUserData, rowIndex: userRowIndex } = await findUserByContact(sheets, senderId, usersHeaders);
     let userPreferences: UserPreferences = {};
     let currentStage: string = 'START';
 
@@ -421,8 +434,8 @@ export async function POST(request: Request) {
         Current_Stage: 'START', Previous_Preferences_JSON: '', LastFeedback: '',
         Last_Interaction: '', Last_Response: ''
       };
-      await appendNewUser(currentUserData, usersHeaders);
-      const reFetchResult = await findUserByContact(senderId, usersHeaders);
+      await appendNewUser(sheets, currentUserData, usersHeaders);
+      const reFetchResult = await findUserByContact(sheets, senderId, usersHeaders);
       userRowIndex = reFetchResult.rowIndex;
     }
 
@@ -442,7 +455,7 @@ export async function POST(request: Request) {
       }
     }
     
-    await updateUserData(userRowIndex, currentUserData, usersHeaders);
+    await updateUserData(sheets, userRowIndex, currentUserData, usersHeaders);
 
     // 5. Prepare Payload for Blaster (via API_Trigger)
     let ruleToTrigger: string = "DEFAULT_REPLY_RULE"; // A default rule in Blaster to handle replies
@@ -481,6 +494,14 @@ export async function POST(request: Request) {
     // await writeAnalyticsLog(senderId, 'ConversationStep', { stage: nextStage, response: lastResponse });
 
     // 7. Send Trigger to Blaster
-    await writeApiTrigger(senderId, ruleToTrigger, actionType, blasterPayload);
+    await writeApiTrigger(sheets, senderId, ruleToTrigger, actionType, blasterPayload);
 
-    return NextResponse.json
+    return NextResponse.json({ status: 'success', message: 'Processing complete, trigger sent to Blaster via Sheets' });
+
+  } catch (error: any) { // Catch as any to access error.message and error.stack
+    console.error('Error in Vercel API:', error);
+    // Log error to Analytics_Log (future enhancement)
+    // await writeAnalyticsLog(senderId, 'API_Error', { error: error.message, stack: error.stack, body: request.body });
+    return NextResponse.json({ message: 'Internal Server Error', error: error.message }, { status: 500 });
+  }
+}
