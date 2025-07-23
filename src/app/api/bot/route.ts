@@ -8,17 +8,24 @@ const SPREADSHEET_ID = '1Q6tWAE8-lNXu-qQrQNCUg4nHLUkOEhTxmNGbXtRMYBI'; // <--- !
 
 // וודא/י שמשתני הסביבה מוגדרים ב-Vercel
 // GOOGLE_SERVICE_ACCOUNT_EMAIL: המייל של חשבון השירות שלך
-// GOOGLE_PRIVATE_KEY: המפתח הפרטי של חשבון השירות שלך (זכור/י להחליף את \\n ב-\n)
-const GOOGLE_SERVICE_ACCOUNT_EMAIL = "maasecha-sheets-access-id@maasecha-project.iam.gserviceaccount.com"
-const GOOGLE_PRIVATE_KEY = \\644f1395352ca6d4db33b40739397a847d6e879f...\\n...\\n
+// GOOGLE_PRIVATE_KEY: המפתח הפרטי של חשבון השירות שלך (זכור/י להחליף את שבירות השורה)
+const GOOGLE_SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') : null;
 
 // --- Google Sheets API Authentication ---
-const auth = new google.auth.JWT(
-  GOOGLE_SERVICE_ACCOUNT_EMAIL,
-  null,
-  GOOGLE_PRIVATE_KEY,
-  ['https://www.googleapis.com/auth/spreadsheets']
-);
+// Add a check to ensure required environment variables are present
+if (!GOOGLE_SERVICE_ACCOUNT_EMAIL || !GOOGLE_PRIVATE_KEY) {
+  console.error("Missing Google Sheets API credentials in environment variables.");
+  // In a real application, you might want to throw an error or handle this more gracefully.
+  // Forcing type assertion for deployment context, as we expect these to be set in Vercel.
+}
+
+const auth = new google.auth.JWT({
+  email: GOOGLE_SERVICE_ACCOUNT_EMAIL as string,
+  key: GOOGLE_PRIVATE_KEY as string,
+  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
+
 const sheets = google.sheets({ version: 'v4', auth });
 
 // --- Sheet Names ---
@@ -26,11 +33,64 @@ const USERS_SHEET_NAME = "Users";
 const API_TRIGGER_SHEET_NAME = "API_Trigger";
 const ANALYTICS_LOG_SHEET_NAME = "Analytics_Log"; // For future analytics logging
 
+// --- Type Definitions for Conversation Logic (Comprehensive) ---
+type Button = { text: string; value: string };
+type ListRow = { id: string; title: string };
+type ListSection = { title: string; rows: ListRow[] };
+
+type QuestionType = 'buttons' | 'list' | 'text' | 'text_input';
+
+type QuestionConfig = {
+  type: QuestionType;
+  body: string;
+  buttons?: Button[]; // Optional for text/text_input
+  button_text?: string; // For list type
+  sections?: ListSection[]; // For list type
+};
+
+// Represents the user's preferences stored in Google Sheets (matching column names)
+type UserPreferences = {
+  Contact?: string;
+  UserType?: string;
+  Name?: string;
+  UserGender?: string;
+  PrefSector?: string;
+  PrefSubSector?: string;
+  PrefStyle?: string;
+  PrefChassidus?: string;
+  PrefAgeRange?: string;
+  PrefStatus?: string;
+  PrefMinHeight?: string;
+  PrefMaxHeight?: string;
+  PrefHeadCovering?: string;
+  PrefWorkStudy?: string;
+  PrefEda?: string;
+  PrefLocation?: string;
+  PrefSmoking?: string;
+  ApprovalStatus?: string;
+  AssignedUniqueId?: string;
+  UserProfileId?: string;
+  DateRegistered?: string;
+  DateApproved?: string;
+  Notes?: string;
+  Message?: string;
+  Date?: string;
+  Time?: string;
+  Sent?: string;
+  Current_Stage?: string;
+  Previous_Preferences_JSON?: string;
+  LastFeedback?: string;
+  Last_Interaction?: string; // Added from Google Sheet Headers
+  Last_Response?: string;    // Added from Google Sheet Headers
+  // Add other user sheet headers here as needed
+  [key: string]: any; // Allow indexing with string for dynamic access
+};
+
+
 // --- Define Questions and Responses ---
-// הגדרת השאלות כמבני נתונים. זה מאפשר ניהול קל וקוד נקי.
-const QUESTIONS = {
+const QUESTIONS: { [key: string]: QuestionConfig } = {
   main_menu: {
-    type: 'buttons', // Assuming a button message type
+    type: 'buttons',
     body: 'ברוך הבא למיזם מעשיך יקרבוך! מה תרצה לעשות?',
     buttons: [
       { text: '💠 כניסה למיזם והצטרפות 💠', value: 'join_project' },
@@ -102,36 +162,41 @@ const QUESTIONS = {
     type: 'text',
     body: 'לא הבנתי את תשובתך. אנא בחר/י אחת מהאפשרויות או הקלד/י "חזור" כדי לחזור לשלב הקודם.',
   },
-  // For "חזור" functionality
-  go_back_button: { text: 'חזור לשלב הקודם 🔙', value: 'action_back' },
 };
+
+// For "חזור" functionality
+const GO_BACK_BUTTON: Button = { text: 'חזור לשלב הקודם 🔙', value: 'action_back' };
 
 // --- Helper Functions ---
 // Function to get headers from a sheet
-async function getSheetHeaders(sheetName) {
+async function getSheetHeaders(sheetName: string): Promise<string[]> {
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
     range: `${sheetName}!1:1`, // Get only the first row (headers)
   });
-  return response.data.values ? response.data.values[0] : [];
+  return response.data.values ? response.data.values[0] as string[] : [];
 }
 
 // Function to find a user row by contact and return data as an object
-async function findUserByContact(contact, headers) {
+async function findUserByContact(contact: string, headers: string[]): Promise<{ userData: UserPreferences | null, rowIndex: number }> {
   const usersResponse = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
     range: `${USERS_SHEET_NAME}!A:Z`, // Fetch all relevant columns
   });
   const usersRows = usersResponse.data.values || [];
-
+  
   // Find the user row (skip header row)
+  // userRowIndex is 0-indexed for array, +1 for Sheets 1-indexed row number
   const userRowIndex = usersRows.findIndex((row, index) => index > 0 && row[0] === contact);
 
   if (userRowIndex !== -1) {
     const userDataArray = usersRows[userRowIndex];
-    const userDataObject = {};
+    const userDataObject: UserPreferences = {};
     headers.forEach((header, index) => {
-      userDataObject[header] = userDataArray[index];
+      // Ensure we only assign if header and value exist
+      if (header && userDataArray[index] !== undefined) {
+        userDataObject[header] = userDataArray[index];
+      }
     });
     return { userData: userDataObject, rowIndex: userRowIndex };
   }
@@ -139,34 +204,34 @@ async function findUserByContact(contact, headers) {
 }
 
 // Function to update a user row in Google Sheets
-async function updateUserData(rowIndex, updatedData, headers) {
+async function updateUserData(rowIndex: number, updatedData: UserPreferences, headers: string[]) {
   const values = headers.map(header => updatedData[header] !== undefined ? updatedData[header] : '');
   await sheets.spreadsheets.values.update({
     spreadsheetId: SPREADSHEET_ID,
     range: `${USERS_SHEET_NAME}!A${rowIndex + 1}`, // +1 because Sheets is 1-indexed
     valueInputOption: 'USER_ENTERED',
-    resource: {
+    requestBody: {
       values: [values]
     },
   });
 }
 
 // Function to append a new user row to Google Sheets
-async function appendNewUser(newUserData, headers) {
+async function appendNewUser(newUserData: UserPreferences, headers: string[]) {
   const values = headers.map(header => newUserData[header] !== undefined ? newUserData[header] : '');
   await sheets.spreadsheets.values.append({
     spreadsheetId: SPREADSHEET_ID,
     range: `${USERS_SHEET_NAME}!A:Z`,
     valueInputOption: 'USER_ENTERED',
     insertDataOption: 'INSERT_ROWS',
-    resource: {
+    requestBody: {
       values: [values]
     },
   });
 }
 
 // Function to write a trigger to API_Trigger sheet for Blaster
-async function writeApiTrigger(senderId, ruleToTrigger, actionType, payload) {
+async function writeApiTrigger(senderId: string, ruleToTrigger: string, actionType: string, payload: { [key: string]: any }) {
   const apiTriggerHeaders = ["Contact", "Message", "Action", "Ready_To_Send", "Sent_Status", "#MESSAGE_TEXT", "#BUTTON_1_TEXT", "#BUTTON_1_VALUE", "#BUTTON_2_TEXT", "#BUTTON_2_VALUE", "#IMAGE_URL", "#PROFILE1_ID", "#PROFILE1_NICKNAME", "#PROFILE1_DESCRIPTION", "#PROFILE1_PICTURE", "#MATCH_REASON", "#CURRENT_MATCH_INDEX", "#BUTTON_3_TEXT", "#BUTTON_3_VALUE", "#BUTTON_4_TEXT", "#BUTTON_4_VALUE"];
   const triggerValues = new Array(apiTriggerHeaders.length).fill('');
 
@@ -189,7 +254,7 @@ async function writeApiTrigger(senderId, ruleToTrigger, actionType, payload) {
     range: `${API_TRIGGER_SHEET_NAME}!A:Z`,
     valueInputOption: 'USER_ENTERED',
     insertDataOption: 'INSERT_ROWS',
-    resource: {
+    requestBody: {
       values: [triggerValues]
     },
   });
@@ -197,18 +262,15 @@ async function writeApiTrigger(senderId, ruleToTrigger, actionType, payload) {
 
 // --- Main Conversation Logic (State Machine) ---
 // This function determines the next step based on current state and user response
-function getNextStepLogic(lastResponse, currentUserState, userPreferences) {
-  let nextStage = currentUserState.Current_Stage;
-  let replyData = QUESTIONS.invalid_input; // Default to invalid input
-  let updatedPreferences = { ...userPreferences }; // Create a mutable copy
+function getNextStepLogic(lastResponse: string, currentUserState: UserPreferences, userPreferences: UserPreferences) {
+  let nextStage: string = currentUserState.Current_Stage || 'START';
+  let replyData: QuestionConfig = QUESTIONS.invalid_input; // Default to invalid input
+  let updatedPreferences: UserPreferences = { ...userPreferences }; // Create a mutable copy
 
   // Handle "חזור" (Go Back) action
-  if (lastResponse === QUESTIONS.go_back_button.value) {
-    // This is a simplified "go back". In a real app, you'd manage a stack of stages.
-    // For now, let's just go back to the previous logical step.
-    // This requires knowing the previous stage, which we'll need to store.
-    // For this skeleton, let's just go back to MAIN_MENU for simplicity if "back" is pressed early.
-    // In full implementation, we'd use currentUserState.Previous_Stage if stored.
+  if (lastResponse === GO_BACK_BUTTON.value) {
+    // This is a simplified "go back". In a real app, you'd manage a stack of stages (e.g., in userPreferences.StageHistory).
+    // For this skeleton, we hardcode previous stages.
     switch (currentUserState.Current_Stage) {
         case 'MAIN_MENU': return { nextStage: 'START', replyData: QUESTIONS.main_menu, updatedPreferences };
         case 'SELECT_ROLE': return { nextStage: 'MAIN_MENU', replyData: QUESTIONS.main_menu, updatedPreferences };
@@ -216,7 +278,7 @@ function getNextStepLogic(lastResponse, currentUserState, userPreferences) {
         case 'ASK_GENDER': return { nextStage: 'WAITING_FOR_AGREEMENT', replyData: QUESTIONS.ask_agreement, updatedPreferences };
         case 'WAITING_FOR_GENDER_CONFIRMATION': return { nextStage: 'ASK_GENDER', replyData: QUESTIONS.ask_gender, updatedPreferences };
         case 'ASK_SECTOR': return { nextStage: 'WAITING_FOR_GENDER_CONFIRMATION', replyData: (userPreferences.UserGender === 'גבר' ? QUESTIONS.gender_confirmation_male : QUESTIONS.gender_confirmation_female), updatedPreferences };
-        // Add more cases for going back from other stages
+        // Add more cases for going back from other stages according to your Blueprint
         default: return { nextStage: 'MAIN_MENU', replyData: QUESTIONS.main_menu, updatedPreferences }; // Fallback
     }
   }
@@ -232,20 +294,17 @@ function getNextStepLogic(lastResponse, currentUserState, userPreferences) {
         nextStage = 'SELECT_ROLE';
         replyData = QUESTIONS.select_role;
       } else if (lastResponse === 'personal_area') {
-        // Handle personal area logic
         replyData = { type: 'text', body: 'אזור אישי בבנייה. אנא חזור/י מאוחר יותר.' };
         nextStage = 'MAIN_MENU'; // Stay in main menu
       } else if (lastResponse === 'help') {
-        // Handle help logic
         replyData = { type: 'text', body: 'לשאלות נפוצות, בקר/י באתר שלנו. לתמיכה אישית, השאר/י פניה.' };
-        nextStage = 'MAIN_MENU'; // Stay in main menu
+        nextStage = 'MAIN_MENU';
       } else if (lastResponse === 'contact_us') {
-        // Handle contact us logic
         replyData = { type: 'text', body: 'אנא השאר/י את שמך ומספר הטלפון שלך ונחזור אליך.' };
-        nextStage = 'MAIN_MENU'; // Stay in main menu
+        nextStage = 'MAIN_MENU';
       } else {
         replyData = QUESTIONS.invalid_input;
-        nextStage = 'MAIN_MENU'; // Stay in main menu
+        nextStage = 'MAIN_MENU';
       }
       break;
 
@@ -253,23 +312,23 @@ function getNextStepLogic(lastResponse, currentUserState, userPreferences) {
       if (lastResponse === 'seeker') {
         nextStage = 'WAITING_FOR_AGREEMENT';
         replyData = QUESTIONS.seeker_intro;
-        updatedPreferences.UserType = 'Seeker'; // Update UserType
+        updatedPreferences.UserType = 'Seeker';
       } else if (lastResponse === 'matchmaker') {
         replyData = { type: 'text', body: 'מודול השדכנים בבנייה. אנא חזור/י מאוחר יותר.' };
-        nextStage = 'MAIN_MENU'; // Go back to main menu
+        nextStage = 'MAIN_MENU';
       } else {
         replyData = QUESTIONS.invalid_input;
-        nextStage = 'SELECT_ROLE'; // Stay in current stage
+        nextStage = 'SELECT_ROLE';
       }
       break;
 
     case 'WAITING_FOR_AGREEMENT':
-      if (lastResponse.includes('כן')) { // Case-insensitive check for "כן"
+      if (lastResponse.includes('כן')) {
         nextStage = 'ASK_GENDER';
         replyData = QUESTIONS.ask_gender;
       } else {
         replyData = { type: 'text', body: 'כדי להתחיל את התהליך עליך לאשר ב"כן".' };
-        nextStage = 'WAITING_FOR_AGREEMENT'; // Stay in current stage
+        nextStage = 'WAITING_FOR_AGREEMENT';
       }
       break;
 
@@ -277,35 +336,31 @@ function getNextStepLogic(lastResponse, currentUserState, userPreferences) {
       if (lastResponse === 'male') {
         nextStage = 'WAITING_FOR_GENDER_CONFIRMATION';
         replyData = QUESTIONS.gender_confirmation_male;
-        updatedPreferences.UserGender = 'גבר'; // Update UserGender
+        updatedPreferences.UserGender = 'גבר';
       } else if (lastResponse === 'female') {
         nextStage = 'WAITING_FOR_GENDER_CONFIRMATION';
         replyData = QUESTIONS.gender_confirmation_female;
-        updatedPreferences.UserGender = 'אישה'; // Update UserGender
+        updatedPreferences.UserGender = 'אישה';
       } else {
         replyData = QUESTIONS.invalid_input;
-        nextStage = 'ASK_GENDER'; // Stay in current stage
+        nextStage = 'ASK_GENDER';
       }
       break;
 
     case 'WAITING_FOR_GENDER_CONFIRMATION':
-      if (lastResponse.includes('אישור')) { // Case-insensitive check for "אישור"
+      if (lastResponse.includes('אישור')) {
         nextStage = 'ASK_SECTOR';
-        // Dynamically adjust message based on gender
-        QUESTIONS.ask_pref_sector.body = `מצוין! איזה מגזר ${updatedPreferences.UserGender === 'גבר' ? 'אתה מחפש' : 'את מחפשת'}?`;
+        (QUESTIONS.ask_pref_sector as any).body = `מצוין! איזה מגזר ${updatedPreferences.UserGender === 'גבר' ? 'אתה מחפש' : 'את מחפשת'}?`;
         replyData = QUESTIONS.ask_pref_sector;
       } else {
         replyData = { type: 'text', body: 'אנא אשר/י ב"אישור" כדי להמשיך.' };
-        nextStage = 'WAITING_FOR_GENDER_CONFIRMATION'; // Stay in current stage
+        nextStage = 'WAITING_FOR_GENDER_CONFIRMATION';
       }
       break;
 
     case 'ASK_SECTOR':
-      // This is where you'd save PrefSector and move to SubSector or AgeRange
-      // For now, just acknowledge and move to a placeholder
       if (['חרדי', 'דתי לאומי', 'מתחזק', 'מסורתי', 'כללי'].includes(lastResponse)) {
         updatedPreferences.PrefSector = lastResponse;
-        // In a full implementation, this would branch to ASK_SUB_SECTOR_CHAREDI/DATI or directly to ASK_AGE
         replyData = { type: 'text', body: `קיבלתי: ${lastResponse}. נמשיך לשאלת תת-מגזר/גיל.` };
         nextStage = 'REGISTRATION_COMPLETE'; // Placeholder for now
       } else {
@@ -314,18 +369,14 @@ function getNextStepLogic(lastResponse, currentUserState, userPreferences) {
       }
       break;
 
-    // ... Add more cases for other stages (ASK_SUB_SECTOR, ASK_AGE, etc.)
-    // Remember to update updatedPreferences for each relevant field
-
     case 'REGISTRATION_COMPLETE':
         replyData = { type: 'text', body: `תודה לך, ${updatedPreferences.Name || 'יקר/ה'}! השלמת את תהליך ההרשמה. אנו בודקים את הנתונים וניצור קשר בהקדם עם הצעות ראשונות.` };
         nextStage = 'IDLE'; // User is registered and waiting for approval
         break;
 
     default:
-      // Fallback for unknown stages or errors
       replyData = QUESTIONS.error_message;
-      nextStage = 'START'; // Reset to start
+      nextStage = 'START';
       break;
   }
 
@@ -347,8 +398,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     console.log('Received data from Make:', JSON.stringify(body, null, 2));
 
-    const senderId = body.sender_id;
-    const lastResponse = body.last_response;
+    const senderId: string = body.sender_id;
+    const lastResponse: string = body.last_response;
 
     if (!senderId || !lastResponse) {
       console.error('Missing sender_id or last_response in request body.');
@@ -356,7 +407,7 @@ export async function POST(request: Request) {
     }
 
     // 1. Get User Headers from Google Sheets
-    const usersHeaders = await getSheetHeaders(USERS_SHEET_NAME);
+    const usersHeaders: string[] = await getSheetHeaders(USERS_SHEET_NAME);
     if (usersHeaders.length === 0) {
       console.error(`Headers not found for ${USERS_SHEET_NAME}. Sheet might be empty or misconfigured.`);
       return NextResponse.json({ message: 'Sheet headers not found' }, { status: 500 });
@@ -364,16 +415,16 @@ export async function POST(request: Request) {
 
     // 2. Load User Data from Google Sheets
     let { userData: currentUserData, rowIndex: userRowIndex } = await findUserByContact(senderId, usersHeaders);
-    let userPreferences = {}; // This will hold the preferences from the sheet
-    let currentStage = 'START'; // Default stage for new users
+    let userPreferences: UserPreferences = {};
+    let currentStage: string = 'START';
 
     if (currentUserData) {
-      // Existing user: Load current stage and preferences from sheet columns
       currentStage = currentUserData.Current_Stage || 'START';
-      // Map individual preference columns to a preferences object for logic
       usersHeaders.forEach(header => {
-        if (header.startsWith('Pref') || header === 'UserGender' || header === 'UserType' || header === 'Name') {
-          userPreferences[header] = currentUserData[header];
+        if (header.startsWith('Pref') || header === 'UserGender' || header === 'UserType' || header === 'Name' || header === 'Current_Stage' || header === 'Previous_Preferences_JSON' || header === 'LastFeedback' || header === 'Last_Interaction' || header === 'Last_Response') {
+          if (currentUserData && currentUserData[header] !== undefined) {
+            userPreferences[header] = currentUserData[header];
+          }
         }
       });
     } else {
@@ -386,42 +437,37 @@ export async function POST(request: Request) {
         PrefLocation: '', PrefSmoking: '', ApprovalStatus: 'New', AssignedUniqueId: '',
         UserProfileId: '', DateRegistered: new Date().toISOString(), DateApproved: '',
         Notes: '', Message: '', Date: '', Time: '', Sent: '',
-        Current_Stage: 'START', Previous_Preferences_JSON: '', LastFeedback: ''
+        Current_Stage: 'START', Previous_Preferences_JSON: '', LastFeedback: '',
+        Last_Interaction: '', Last_Response: ''
       };
-      // Append new user row to Google Sheets
       await appendNewUser(currentUserData, usersHeaders);
-      // Re-fetch to get the rowIndex for future updates (or assume last row)
       const reFetchResult = await findUserByContact(senderId, usersHeaders);
       userRowIndex = reFetchResult.rowIndex;
     }
 
     // 3. Process Conversation Logic
-    const { nextStage, replyData, updatedPreferences } = getNextStepLogic(lastResponse, { Current_Stage: currentStage }, userPreferences);
+    const { nextStage, replyData, updatedPreferences } = getNextStepLogic(lastResponse, currentUserData, userPreferences);
 
     // 4. Update User Data in Google Sheets
-    // Update currentUserData object with new stage and preferences
     currentUserData.Current_Stage = nextStage;
     currentUserData.Last_Interaction = new Date().toISOString();
     currentUserData.Last_Response = lastResponse;
+    currentUserData.Previous_Preferences_JSON = JSON.stringify(userPreferences); // Store the state *before* this update
+
     // Update individual preference columns based on updatedPreferences
     for (const key in updatedPreferences) {
-      if (usersHeaders.includes(key)) { // Ensure the key is a valid column header
+      if (usersHeaders.includes(key) && updatedPreferences[key] !== undefined) {
         currentUserData[key] = updatedPreferences[key];
       }
     }
-    // Save previous preferences JSON (for backup/undo)
-    // Note: This assumes updatedPreferences is the full state.
-    // If you want to save the *previous* state, you need to store userPreferences before updating.
-    // For now, let's just save the current updated state as the "previous" for the *next* interaction.
-    currentUserData.Previous_Preferences_JSON = JSON.stringify(userPreferences); // Store the state *before* this update
-
+    
     await updateUserData(userRowIndex, currentUserData, usersHeaders);
 
     // 5. Prepare Payload for Blaster (via API_Trigger)
-    let ruleToTrigger = "DEFAULT_REPLY_RULE"; // A default rule in Blaster to handle replies
-    let actionType = "trigger_rule"; // Default action
+    let ruleToTrigger: string = "DEFAULT_REPLY_RULE"; // A default rule in Blaster to handle replies
+    let actionType: string = "trigger_rule"; // Default action
 
-    const blasterPayload = {
+    const blasterPayload: { [key: string]: any } = {
       MESSAGE_TEXT: replyData.body,
     };
 
@@ -433,28 +479,20 @@ export async function POST(request: Request) {
         }
       });
       // Add "חזור" button if not already present and applicable
-      if (!replyData.buttons.some(b => b.value === QUESTIONS.go_back_button.value)) {
-          // Find the next available button slot (e.g., 5th button if we support it, or replace 4th)
-          // For simplicity, let's add it as BUTTON_4 if there are less than 3 buttons, otherwise skip for now.
-          if (replyData.buttons.length < 4) {
-              blasterPayload[`BUTTON_${replyData.buttons.length + 1}_TEXT`] = QUESTIONS.go_back_button.text;
-              blasterPayload[`BUTTON_${replyData.buttons.length + 1}_VALUE`] = QUESTIONS.go_back_button.value;
+      if (!replyData.buttons.some(b => b.value === GO_BACK_BUTTON.value)) {
+          if (replyData.buttons.length < 4) { // Add to an available slot
+              blasterPayload[`BUTTON_${replyData.buttons.length + 1}_TEXT`] = GO_BACK_BUTTON.text;
+              blasterPayload[`BUTTON_${replyData.buttons.length + 1}_VALUE`] = GO_BACK_BUTTON.value;
           }
       }
     } else if (replyData.type === 'list' && replyData.sections) {
-        // For list messages, Blaster needs specific variables.
-        // This is a placeholder. You'll need to define Blaster variables for list messages.
-        // Example: #LIST_HEADER, #LIST_BODY, #LIST_BUTTON_TEXT, #LIST_SECTION_1_TITLE, #LIST_SECTION_1_ROW_1_TITLE, #LIST_SECTION_1_ROW_1_ID
-        // This is more complex and will be implemented in detail later.
         blasterPayload.MESSAGE_TEXT = `(LIST MESSAGE - NOT FULLY IMPLEMENTED YET) ${replyData.body}`;
-        // You might need a specific Blaster rule for list messages.
-        ruleToTrigger = "LIST_MESSAGE_RULE";
+        ruleToTrigger = "LIST_MESSAGE_RULE"; // Requires a specific Blaster rule
     } else if (replyData.type === 'text_input') {
-        // For text input, just send the message. No specific buttons needed.
-        // Add "חזור" button if applicable
         blasterPayload.MESSAGE_TEXT = replyData.body;
-        blasterPayload.BUTTON_1_TEXT = QUESTIONS.go_back_button.text;
-        blasterPayload.BUTTON_1_VALUE = QUESTIONS.go_back_button.value;
+        // For text_input, always offer a "חזור" button if applicable
+        blasterPayload.BUTTON_1_TEXT = GO_BACK_BUTTON.text;
+        blasterPayload.BUTTON_1_VALUE = GO_BACK_BUTTON.value;
     }
 
 
@@ -466,7 +504,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ status: 'success', message: 'Processing complete, trigger sent to Blaster via Sheets' });
 
-  } catch (error) {
+  } catch (error: any) { // Catch as any to access error.message and error.stack
     console.error('Error in Vercel API:', error);
     // Log error to Analytics_Log (future enhancement)
     // await writeAnalyticsLog(senderId, 'API_Error', { error: error.message, stack: error.stack, body: request.body });

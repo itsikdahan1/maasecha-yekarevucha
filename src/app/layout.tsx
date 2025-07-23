@@ -3,6 +3,7 @@ import { Assistant } from "next/font/google";
 import "./globals.css";
 import { RootLayoutClient } from "./RootLayoutClient";
 import type { Metadata } from 'next'; // 1. ייבוא סוג Metadata
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const assistant = Assistant({
   subsets: ["hebrew"],
